@@ -1,0 +1,2 @@
+(()=>{"use strict";const e=require("electron"),r={ipcRenderer:{sendMessage(r,...n){e.ipcRenderer.send(r,n)},on:(r,n)=>{e.ipcRenderer.on(r,n)},off:(r,n)=>{e.ipcRenderer.off(r,n)},removeAllListeners:r=>{e.ipcRenderer.removeAllListeners(r)},listenerCount:r=>e.ipcRenderer.listenerCount(r),once:(r,n)=>{e.ipcRenderer.once(r,n)},invoke:async(r,...n)=>e.ipcRenderer.invoke(r,...n)}};e.contextBridge.exposeInMainWorld("electron",r),module.exports={}})();
+//# sourceMappingURL=preload.js.map
