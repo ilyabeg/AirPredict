@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import * as Cesium from 'cesium';
 import invokeServer from '../IPC/InvokeServer'; 
+import FlightPin from './FlightPointPin';
 
 export default function EarthClickHandler() {
   
@@ -40,7 +41,7 @@ export default function EarthClickHandler() {
             end_point: endPoint
           });
           
-          console.log(`Calculated distance: ${result.distance} meters`);
+          console.log(`Calculated distance: ${result.distance}km`);
           setStartPoint(null); 
         } 
         catch (error) {
@@ -53,11 +54,17 @@ export default function EarthClickHandler() {
   };
 
   return (
-    <ScreenSpaceEventHandler>
-      <ScreenSpaceEvent 
-        action={handleLeftClick} 
-        type={Cesium.ScreenSpaceEventType.LEFT_CLICK} 
-      />
-    </ScreenSpaceEventHandler>
+    <>
+      <ScreenSpaceEventHandler>
+        <ScreenSpaceEvent 
+          action={handleLeftClick} 
+          type={Cesium.ScreenSpaceEventType.LEFT_CLICK} 
+        />
+      </ScreenSpaceEventHandler>
+
+      {startPoint && (
+        <FlightPin lat={startPoint.lat} lon={startPoint.lon} />
+      )}
+    </>
   );
 }
