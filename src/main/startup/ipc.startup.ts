@@ -15,7 +15,7 @@ export default function setIpcRoutes(
   async function forwardErrorsToClient<T>(action: () => Promise<T>): Promise<T | null> 
   {
     try {
-      return action();
+      return action(); // try to execute the event handler 
     } 
     catch (ex: any) 
     {
@@ -23,6 +23,8 @@ export default function setIpcRoutes(
       const err_msg: ErrorMessage = {
         stringMessage: `Error from server: ${createStackTraceFromException(ex)}`
       };
+
+      // if handler crashed, forward error to Frontend UI
       try {
         ClientEventHandlers.handleErrorMessage(browserWindow, err_msg);
       } 
