@@ -2,7 +2,7 @@ import { IpcMainInvokeEvent } from 'electron';
 import { IPCMethods } from '../../shared/IPC/types/clientToServer';
 
 // A type-safe wrapper around the request-response API of Electron Inter-Process Communication API.
-export default function registerEvent<T extends keyof IPCMethods>(
+export default function dispatchEvent<T extends keyof IPCMethods>(
   method: T,
   // eslint-disable-next-line no-undef
   ipcMain: Electron.IpcMain,

@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
 import * as ClientEventHandlers from '../handlers/clientNotificationHandlers';
-import registerEvent from '../IPC/RegisterEvent';
+import dispatchEvent from '../IPC/DispatchEvent';
 import { ErrorMessage } from '../../shared/Types/ErrorMessage';
 import createStackTraceFromException from '../../shared/utils/StackTrace.utils';
 
