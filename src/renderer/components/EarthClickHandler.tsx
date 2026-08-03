@@ -5,15 +5,16 @@ import invokeServer from '../IPC/InvokeServer';
 
 export default function EarthClickHandler() {
   
-  const { viewer } = useCesium();  
+  const { viewer } = useCesium(); // <- the actual 3D globe
   const [startPoint, setStartPoint] = useState<{ lat: number, lon: number } | null>(null);
 
   const handleLeftClick = async (movement: any) => {
-    if (!viewer || !movement.position) return;
+    if (!viewer || !movement.position) return; // movement.position is the pixel position of the click
 
+    // coverting the pixel position to a cartesian 3D vector on the globe
     const earthClick = viewer.camera.pickEllipsoid(
       movement.position,
-      viewer.scene.globe.ellipsoid
+      viewer.scene.globe.ellipsoid // <- earth ellipsoid model
     );
 
     if (earthClick) {
@@ -31,7 +32,6 @@ export default function EarthClickHandler() {
       } 
       else {
         const endPoint = { lat: clickedLat, lon: clickedLon };
-        console.log('Sending coordinates to Node.js backend...');
 
         try {
           // send to the backend
@@ -40,7 +40,7 @@ export default function EarthClickHandler() {
             end_point: endPoint
           });
           
-          console.log(`Backend says distance is: ${result.distance}`);
+          console.log(`Calculated distance: ${result.distance} meters`);
           setStartPoint(null); 
         } 
         catch (error) {
