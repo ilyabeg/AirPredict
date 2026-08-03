@@ -6,7 +6,7 @@ import dispatchEvent from '../IPC/DispatchEvent';
 import { Geodesic } from 'geographiclib-geodesic';
 
 // This function sets up the IPC event handlers related to flight calculations.
-export function setupFlightEventHandlers(
+export default function setupFlightEventHandlers(
   ipcMain: IpcMain,
   forwardErrors: <T>(action: () => Promise<T>) => Promise<T | null>
 ) 

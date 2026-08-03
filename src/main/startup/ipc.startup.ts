@@ -1,6 +1,6 @@
 import { BrowserWindow } from 'electron';
 import * as ClientEventHandlers from '../handlers/clientNotificationHandlers';
-import dispatchEvent from '../IPC/DispatchEvent';
+import setupFlightEventHandlers from '../handlers/FlightEventHandlers';
 import { ErrorMessage } from '../../shared/Types/ErrorMessage';
 import createStackTraceFromException from '../../shared/utils/StackTrace.utils';
 
@@ -39,4 +39,5 @@ export default function setIpcRoutes(
   }
 
   // Registering events with the ipcMain
+  setupFlightEventHandlers(ipcMain, forwardErrorsToClient);
 }
