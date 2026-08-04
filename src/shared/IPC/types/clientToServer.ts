@@ -1,6 +1,8 @@
+import { FlightPath } from "shared/Types/FlightPath";
+
 /* eslint-disable prettier/prettier */
 export interface IPCMethods {
-    'calculate_flight_path_distance': {
+    calculate_flight_path_distance: {
         request: {
             start_point: {
                 lat: number;
@@ -14,5 +16,10 @@ export interface IPCMethods {
         response: { 
             distance: number; 
         };
+    };
+
+    register_flight: {
+        request: FlightPath,
+        response: { success: boolean };
     };
 }

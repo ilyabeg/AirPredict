@@ -13,13 +13,13 @@ export default function EarthClickHandler() {
   // flights array
   const [savedFlights, setSavedFlights] = useState<FlightPath[]>([]);
 
-// TEMP DEBUG — remove once this is sorted out
-useEffect(() => {
-  if (viewer) {
-    (window as any).debugViewer = viewer;
-    console.log('Viewer exposed as window.debugViewer');
-  }
-}, [viewer]);
+  // TEMP DEBUG — remove once this is sorted out
+  // useEffect(() => {
+  //   if (viewer) {
+  //     (window as any).debugViewer = viewer;
+  //     console.log('Viewer exposed as window.debugViewer');
+  //   }
+  // }, [viewer]);
 
   const handleLeftClick = async (movement: any) => {
     if (!viewer || !movement.position) return; // movement.position is the pixel position of the click
