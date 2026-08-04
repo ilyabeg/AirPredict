@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium, Entity } from 'resium';
 import * as Cesium from 'cesium';
 import invokeServer from '../IPC/InvokeServer'; 
@@ -12,14 +12,6 @@ export default function EarthClickHandler() {
 
   // flights array
   const [savedFlights, setSavedFlights] = useState<FlightPath[]>([]);
-
-  // TEMP DEBUG — remove once this is sorted out
-  // useEffect(() => {
-  //   if (viewer) {
-  //     (window as any).debugViewer = viewer;
-  //     console.log('Viewer exposed as window.debugViewer');
-  //   }
-  // }, [viewer]);
 
   const handleLeftClick = async (movement: any) => {
     if (!viewer || !movement.position) return; // movement.position is the pixel position of the click
@@ -68,6 +60,9 @@ export default function EarthClickHandler() {
           };
           setSavedFlights((prevFlights) => [...prevFlights, newFlight]); // like writing in C#: savedFlights += newFlight
 
+          // register the flight in the backend
+          invokeServer('register_flight', newFlight);
+
           setStartPoint(null); 
         } 
         catch (error) {
@@ -79,13 +74,13 @@ export default function EarthClickHandler() {
     }
   };
 
-  console.log('render, startPoint =', startPoint); // Debug log
   return (
     <>
       <ScreenSpaceEventHandler>
         <ScreenSpaceEvent action={handleLeftClick} type={Cesium.ScreenSpaceEventType.LEFT_CLICK} />
       </ScreenSpaceEventHandler>
 
+      {/* temp violet start point */}
       {startPoint && (<FlightPin lat={startPoint.lat} lon={startPoint.lon} />)}
 
       {/* Loop through all saved flights and draw them */}

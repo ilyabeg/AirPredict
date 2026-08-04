@@ -22,4 +22,9 @@ export interface IPCMethods {
         request: FlightPath,
         response: { success: boolean };
     };
+
+    remove_flight: {
+        request: FlightPath,
+        response: { success: boolean };
+    };
 }

@@ -1,4 +1,3 @@
-import { Plane } from '../../shared/Types/Plane';
 import { IpcMain } from 'electron';
 import dispatchEvent from '../IPC/DispatchEvent';
 
@@ -11,9 +10,7 @@ export default function setupFlightEventHandlers(
   forwardErrors: <T>(action: () => Promise<T>) => Promise<T | null>
 ) 
 {
-  dispatchEvent(
-    'calculate_flight_path_distance',
-    ipcMain,
+  dispatchEvent('calculate_flight_path_distance', ipcMain,
     // The handler function for 'calculate_flight_path_distance' event
     async (param) => {
       
@@ -31,6 +28,8 @@ export default function setupFlightEventHandlers(
         );
 
         // GeographicLib uses mathematical notation: 's12' means "distance between point 1 and point 2" in METERS.
+        // "mathematical notation" = a system of specialized symbols, letters, and signs used
+        //                           to write math and science ideas clearly, briefly, and accurately.
         const distanceInMeters = result.s12;
         if (distanceInMeters === undefined) {
           throw new Error('Failed to calculate distance using Karney Inverse Algorithm.');
