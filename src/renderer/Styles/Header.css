@@ -1,0 +1,49 @@
+.app-header {
+  display: flex;
+  justify-content: space-between; /* Pushes title to left, button to right */
+  align-items: center; /* Vertically centers them */
+  background-color: #1a1a1a;
+  padding: 0 24px; /* Gives breathing room on the sides */
+  height: 64px; /* Fixed height is standard for app headers */
+  border-bottom: 1px solid #2a2a2a; /* divider line */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-size: 1.2em;
+  flex-shrink: 0;
+}
+
+.header-title {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 700; 
+  letter-spacing: -0.5px; /* Tightens the letters for a modern tech logo feel */
+  /* This creates a beautiful, subtle silver/white gradient on the text */
+  background: linear-gradient(90deg, #ffffff, #9ca3af);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; 
+  user-select: none; /* Prevents the user from highlighting it, making it act like a real logo */
+}
+
+.add-flight-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  padding: 0 16px; /* Horizontal padding only */
+  height: 34px; /* Fixed height handles the vertical sizing */
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Subtle depth */
+}
+
+.add-flight-btn:hover {
+  background-color: #1d4ed8;
+}
+
+.add-flight-btn:active {
+  transform: scale(0.97); /* Adds a satisfying 'click' press effect */
+}

@@ -1,13 +1,21 @@
-body {
+/* Force the foundation of the app to take the full window height with a black background */
+html, body, #root {
   margin: 0;
-  overflow: auto;
+  padding: 0;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #000000;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 .body-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* Ensure it takes up the full viewport height */
-  background-color: #e9ecef; /* Optional: Set a background color for better visibility */
-  margin: 0; /* Remove default margin */
+  flex-direction: column; /* Stacks children vertically (header top, content bottom) */
+  height: 100%;
+  margin: 0;
+}
+
+.main-content {
+  flex: 1; /* Tells the content to fill the remaining vertical space */
+  position: relative;
 }

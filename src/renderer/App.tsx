@@ -1,5 +1,6 @@
 import './App.css';
 import useServerEventHandlers from './hooks/serverEventHandlers.hook';
+import Header from './components/Header';
 
 import { Viewer } from 'resium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
@@ -13,22 +14,27 @@ export default function App() {
   useServerEventHandlers();
 
   return (
-    <div style={{ top: 0, left: 0, right: 0, bottom: 0, margin: 0, padding: 0 }}>
-      <Viewer 
-        full 
-        geocoder={false} 
-        baseLayer={false}
-        //baseLayerPicker={false}
-        timeline={false}
-        animation={false}
-        sceneModePicker={false}
-        >          
+    <div className="body-container">
 
-        {/* clicking logic */}
-        <EarthClickHandler />
+      <Header />
 
-        {/* Your 3D airplane path components will eventually go here */}
-      </Viewer>
+      <div className="main-content">
+        <Viewer
+          full 
+          geocoder={false} 
+          baseLayer={false}
+          //baseLayerPicker={false}
+          timeline={false}
+          animation={false}
+          sceneModePicker={false}
+          >          
+
+          {/* clicking logic */}
+          <EarthClickHandler />
+
+          {/* Your 3D airplane path components will eventually go here */}
+        </Viewer>
+      </div>
     </div>
   );
 }

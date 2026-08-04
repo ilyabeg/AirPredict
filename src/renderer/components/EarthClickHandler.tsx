@@ -53,6 +53,7 @@ export default function EarthClickHandler() {
     }
   };
 
+  console.log('render, startPoint =', startPoint); // Debug log
   return (
     <>
       <ScreenSpaceEventHandler>
