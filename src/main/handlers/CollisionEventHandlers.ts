@@ -2,8 +2,8 @@ import { BrowserWindow, IpcMain } from 'electron';
 import dispatchEvent from '../IPC/DispatchEvent';
 import { FlightPath } from 'shared/Types/FlightPath';
 import { CollisionData } from 'shared/Types/CollisionData';
-import * as VectorMath from '../helpers/vectorMath.utils';
-import * as KinematicMath from '../helpers/kinematicsMath.utils';
+import * as VectorMath from '../../shared/utils/vectorMath.utils';
+import * as KinematicMath from '../../shared/utils/kinematicsMath.utils';
 import * as ClientEventHandlers from '../handlers/clientNotificationHandlers';
 import { Geodesic } from 'geographiclib-geodesic';
 

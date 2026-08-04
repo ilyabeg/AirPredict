@@ -30,7 +30,7 @@ export function crossProduct(a: Vector, b: Vector): Vector {
   };
 }
 
-// get the length of the 3D vector
+// get the length of the 3D vector (called 'magnitude')
 export function vectorLength(v: Vector): number {
   return Math.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2);
 }
