@@ -17,8 +17,6 @@ export default function setupFlightEventHandlers(
       const res = await forwardErrors(async () => {
         const { start_point, end_point } = param;
 
-        console.log(`Calculating Karney Inverse from Lat: ${start_point.lat} to Lat: ${end_point.lat}`);
-
         // Execute the Inverse Algorithm on the standard WGS84 Earth model
         const result = Geodesic.WGS84.Inverse(
           start_point.lat,
@@ -30,17 +28,25 @@ export default function setupFlightEventHandlers(
         // GeographicLib uses mathematical notation: 's12' means "distance between point 1 and point 2" in METERS.
         // "mathematical notation" = a system of specialized symbols, letters, and signs used
         //                           to write math and science ideas clearly, briefly, and accurately.
-        const distanceInMeters = result.s12;
-        if (distanceInMeters === undefined) {
-          throw new Error('Failed to calculate distance using Karney Inverse Algorithm.');
+        const distanceInMeters = result.s12; 
+        let heading = result.azi1; // Get the heading from the inverse algorithm result (heading = azimuth1)
+
+        if (distanceInMeters === undefined || heading === undefined) {
+          throw new Error('Failed to calculate distance or heading using Karney Inverse Algorithm.');
         }
 
         // Convert distance to kilometers
         const distanceInKm = distanceInMeters / 1000;
-        console.log(`Calculation complete: ${distanceInKm} km`);
+        console.log(`distance: ${distanceInKm} km`);
+
+        // normalize the heading from (-180 to 180) to standard a compass (0 to 360)
+        if (heading < 0) {
+          heading += 360;
+        }
 
         return {
-          distance: distanceInKm 
+          distance: distanceInKm,
+          heading: heading
         };
       });
 

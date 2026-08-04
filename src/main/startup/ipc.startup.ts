@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron';
 import * as ClientEventHandlers from '../handlers/clientNotificationHandlers';
 import setupFlightEventHandlers from '../handlers/FlightEventHandlers';
-import setupCollisionEventHandlers from 'main/handlers/CollisionEventHandlers';
+import setupCollisionEventHandlers from '../handlers/CollisionEventHandlers';
 import { ErrorMessage } from '../../shared/Types/ErrorMessage';
 import createStackTraceFromException from '../../shared/utils/StackTrace.utils';
 

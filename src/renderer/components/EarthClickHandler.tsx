@@ -50,9 +50,9 @@ export default function EarthClickHandler() {
           const newFlight: FlightPath = {
             aircraft: {
               id: window.crypto.randomUUID(), // generate a unique ID for the plane
-              initial_velocity: 0,
+              initial_velocity: 1,
               acceleration: 0,
-              heading: 0        
+              heading: result.heading        
             }, 
             start_point: startPoint,
             end_point: endPoint,

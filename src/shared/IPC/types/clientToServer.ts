@@ -14,7 +14,8 @@ export interface IPCMethods {
             };
         };
         response: { 
-            distance: number; 
+            distance: number,
+            heading: number         
         };
     };
 
