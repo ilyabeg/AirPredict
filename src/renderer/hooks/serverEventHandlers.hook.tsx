@@ -22,7 +22,9 @@ export default function useServerEventHandlers() {
         Collision! At latitude: ${collision.coordinates.lat} - longitude ${collision.coordinates.lon}, 
         at time: ${collision.time_of_collision}`
       );
-      //<FlightPin lat={collision.coordinates.lat} lon={collision.coordinates.lon} />
+      // render the collision display
+      const alertEvent = new CustomEvent('display-collision-card', { detail: collision });
+      window.dispatchEvent(alertEvent);
     },
     []
   );

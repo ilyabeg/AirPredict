@@ -5,6 +5,7 @@ import Header from './components/Header';
 import { Viewer } from 'resium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import EarthClickHandler from './components/EarthClickHandler';
+import CollisionControl from './components/CollisionControl';
 
 (window as any).CESIUM_BASE_URL = '/cesium/';
 
@@ -31,6 +32,9 @@ export default function App() {
 
           {/* clicking logic */}
           <EarthClickHandler />
+
+          {/* collision displayer */}
+          <CollisionControl />
 
           {/* Your 3D airplane path components will eventually go here */}
         </Viewer>

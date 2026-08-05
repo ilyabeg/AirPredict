@@ -1,15 +1,68 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Card, CardContent, Typography, Box, Divider } from '@mui/material';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import TimerIcon from '@mui/icons-material/Timer';
 import { CollisionData } from 'shared/Types/CollisionData';
-import './CollisionCars.css'; 
+import '../Styles/CollisionCard.css'; 
+import { useCesium } from 'resium';
+import * as Cesium from 'cesium';
 
-export default function CollisionCardUI(collision: CollisionData) {
+// React wraps objects in a Prop object
+interface CollisionDataProp {
+  collision: CollisionData
+}
+
+export default function collisionDisplayCard({collision}: CollisionDataProp) {
+
+  const { viewer } = useCesium();
+  const cardRef = useRef<HTMLDivElement>(null); 
+  // HTMLDivElement is an interface of a <div> tag, this allows us to use div properties
+  // like .style, .id, .className
+
+  useEffect(() => {
+    if (!viewer) return;
+
+    const position3D = Cesium.Cartesian3.fromDegrees(
+      collision.coordinates.lon,
+      collision.coordinates.lat
+    );
+
+    // function to change the card's position on screen even if we move the globe
+    // to make it seem like it stays over the collision point forever
+    const updateHtmlPosition = () => {
+      const coords2D = Cesium.SceneTransforms.wgs84ToWindowCoordinates(viewer.scene, position3D);
+
+      if (coords2D && cardRef.current) {
+        cardRef.current.style.left = `${coords2D.x}px`;
+        cardRef.current.style.top = `${coords2D.y}px`;
+        cardRef.current.style.display = 'block'; 
+      }
+    };
+
+    // we run this function every time Cesium's 3D globe model runs preRender (which is 60 fps) -
+    // meaning we change the CSS left and top points 60 times per second, 
+    // instead of re-rendering the whole component 60 times per second.
+    viewer.scene.preRender.addEventListener(updateHtmlPosition);
+    return () => {
+      viewer.scene.preRender.removeEventListener(updateHtmlPosition);
+    };
+  }, [viewer, collision.coordinates.lat, collision.coordinates.lon]);
+
   return (
+    <div
+      ref={cardRef} // <- attach the HTMLDivElement
+      style={{
+        position: 'absolute',
+        transform: 'translate(-50%, -100%)', // shift the window to centralize the anchor point to the bottm 
+        pointerEvents: 'none', // make clickable throught the window
+        zIndex: 9999,
+        display: 'none' // start hidden until the first preRender frame calculates the coordinates
+      }}
+    >
+    
+    {/* 'sx' allows to use css directly inside this component */}
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-      
       <Card className="collision-container">
         
         {/* pb: '16px' is an MUI shortcut that fixes a weird default padding issue on CardContent */}
@@ -52,10 +105,12 @@ export default function CollisionCardUI(collision: CollisionData) {
           {/* coordinates */}
           <Box className="collision-data-style">
             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-              Latitude: {Math.round(collision.coordinates.lat)}
+              Latitude: {collision.coordinates.lat.toFixed(10).slice(0, -5)}
             </Typography>
+          </Box>
+          <Box className="collision-data-style">
             <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-              Longitude: {Math.round(collision.coordinates.lon)}
+              Longitude: {collision.coordinates.lon.toFixed(10).slice(0, -5)}
             </Typography>
           </Box>
 
@@ -66,6 +121,7 @@ export default function CollisionCardUI(collision: CollisionData) {
       <div className="collision-line" />
       <div className="collision-point" />
       
-    </Box>
+      </Box>
+    </div>
   );
 }

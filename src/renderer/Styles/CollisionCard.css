@@ -3,9 +3,9 @@
   min-width: 250px;
   background-color: rgba(30, 30, 30, 0.95) !important; 
   color: white !important;
-  border: 1px solid #ff5252;
+  border: 1.5px solid #ff5252;
   box-shadow: 0 8px 24px rgba(255, 0, 0, 0.2);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(1px);
 }
 
 .collision-title {
