@@ -17,10 +17,15 @@
   font-weight: 700; 
   letter-spacing: -0.5px; /* Tightens the letters for a modern tech logo feel */
   /* This creates a beautiful, subtle silver/white gradient on the text */
-  background: linear-gradient(90deg, #ffffff, #9ca3af);
+  background: linear-gradient(90deg, #ffffff, #858b95);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent; 
   user-select: none; /* Prevents the user from highlighting it, making it act like a real logo */
+}
+
+.header-title:hover {
+    transition: 0.2s ease;
+    transform: scale(1.05);
 }
 
 .add-flight-btn {

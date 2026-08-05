@@ -16,7 +16,7 @@ export default function useServerEventHandlers() {
 
   const collisionAlertHandler = useCallback(
     (_event: IpcRendererEvent, collision: CollisionData) => {
-      console.log(`
+      console.warn(`
         Collision! Between plane A: '${collision.planeA.id}' and Plane B: '${collision.planeB.id}'
         at latitude: ${collision.coordinates.lat} - longitude ${collision.coordinates.lon}, 
         at time: ${collision.time_of_collision}`
