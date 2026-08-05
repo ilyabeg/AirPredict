@@ -1,0 +1,50 @@
+
+.collision-container {
+  min-width: 250px;
+  background-color: rgba(30, 30, 30, 0.95) !important; 
+  color: white !important;
+  border: 1px solid #ff5252;
+  box-shadow: 0 8px 24px rgba(255, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+}
+
+.collision-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #ff5252;
+  font-weight: bold;
+}
+
+.collision-prop-style {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.collision-data-style {
+  display: flex;
+  align-items: center;
+  color: #ffb74d;
+  background-color: rgba(255, 183, 77, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.collision-line {
+  width: 2px;
+  height: 40px;
+  background-color: #ff5252;
+  box-shadow: 0px 0px 8px #ff5252;
+}
+
+.collision-point {
+  width: 12px;
+  height: 12px;
+  background-color: #ffb74d;
+  border-radius: 50%;
+  box-shadow: 0px 0px 12px #ffb74d;
+  border: 2px solid white;
+}
