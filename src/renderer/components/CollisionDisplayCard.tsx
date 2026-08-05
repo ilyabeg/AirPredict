@@ -10,7 +10,7 @@ import * as Cesium from 'cesium';
 
 // React wraps objects in a Prop object
 interface CollisionDataProp {
-  collision: CollisionData
+  collision: CollisionData;
 }
 
 export default function collisionDisplayCard({collision}: CollisionDataProp) {

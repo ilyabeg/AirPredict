@@ -10,5 +10,6 @@ export type FlightPath = {
         lat: number,
         lon: number,
     },
-    distance: number   
+    distance: number,
+    heading: number,
 }

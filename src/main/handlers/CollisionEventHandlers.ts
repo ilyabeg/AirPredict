@@ -6,6 +6,7 @@ import * as VectorMath from '../../shared/utils/vectorMath.utils';
 import * as KinematicMath from '../../shared/utils/kinematicsMath.utils';
 import * as ClientEventHandlers from '../handlers/clientNotificationHandlers';
 import { Geodesic } from 'geographiclib-geodesic';
+import { start } from 'repl';
 
 // all registered flights
 const all_flights: FlightPath[] = [];
@@ -39,8 +40,10 @@ export default function setupCollisionEventHandlers(
 // allowed time difference for collision check
 const timeDiff = 5;//seconds
 
-function checkForCollision(flightA: FlightPath, flightB: FlightPath) : CollisionData | null
-{
+function checkForCollision(flightA: FlightPath, flightB: FlightPath) : CollisionData | null {
+
+    if (!potentialCollision(flightA, flightB)) return null;
+
     // get the flights intersection point
     const flight_intersection = findIntersection(flightA, flightB);
     if (!flight_intersection) return null;
@@ -88,6 +91,28 @@ function checkForCollision(flightA: FlightPath, flightB: FlightPath) : Collision
         }
     }
     return collisionData;
+}
+
+// minimum allowed distance limit between flight paths
+const pathDistanceLimit = 50;//kilometers
+
+function potentialCollision(flightA: FlightPath, flightB: FlightPath) : boolean {
+    // the distance from flight A starting point to flight B starting point (in km)
+    const startToStart = Geodesic.WGS84.Inverse(
+        flightA.start_point.lat, flightA.start_point.lon,
+        flightB.start_point.lat, flightB.start_point.lon
+    ).s12! / 1000;
+
+    // the distance between them is greater than their potential total distance, which means they never collide
+    if (startToStart > flightA.distance + flightB.distance) return false;
+
+    // if they can potentialy reach each other, check their heading
+    const headingDiff = Math.abs(flightA.heading - flightB.heading);
+
+    // if the paths are basically parallel and they are at least 50km from each other
+    if (headingDiff <= 2.0 && startToStart >= pathDistanceLimit) return false;
+
+    return true; // can potentialy collide
 }
 
 function findIntersection(flightA: FlightPath, flightB: FlightPath) : { lat: number; lon: number }[] | null

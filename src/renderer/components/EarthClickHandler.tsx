@@ -56,7 +56,8 @@ export default function EarthClickHandler() {
             }, 
             start_point: startPoint,
             end_point: endPoint,
-            distance: result.distance
+            distance: result.distance,
+            heading: result.heading          
           };
           setSavedFlights((prevFlights) => [...prevFlights, newFlight]); // like writing in C#: savedFlights += newFlight
 

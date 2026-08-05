@@ -37,7 +37,6 @@ export default function setupFlightEventHandlers(
 
         // Convert distance to kilometers
         const distanceInKm = distanceInMeters / 1000;
-        console.log(`distance: ${distanceInKm} km`);
 
         // normalize the heading from (-180 to 180) to standard a compass (0 to 360)
         if (heading < 0) {
