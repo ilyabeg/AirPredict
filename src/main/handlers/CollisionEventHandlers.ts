@@ -6,7 +6,6 @@ import * as VectorMath from '../../shared/utils/vectorMath.utils';
 import * as KinematicMath from '../../shared/utils/kinematicsMath.utils';
 import * as ClientEventHandlers from '../handlers/clientNotificationHandlers';
 import { Geodesic } from 'geographiclib-geodesic';
-import { start } from 'repl';
 
 // all registered flights
 const all_flights: FlightPath[] = [];
@@ -25,9 +24,18 @@ export default function setupCollisionEventHandlers(
 
           // check for collisions
           all_flights.forEach((existing) => {
-            const collision = checkForCollision(newFlight, existing);
-            if (collision)
-              ClientEventHandlers.handleCollisionAlert(browserWindow, collision);
+            const normal_collision = checkNormalCollision(newFlight, existing);
+
+            // if they collided normally
+            if (normal_collision) {
+              ClientEventHandlers.handleCollisionAlert(browserWindow, normal_collision);
+            } 
+            else {
+              // if they collided head on
+              const headOnCollision = checkHeadOnCollision(newFlight, existing);
+              if (headOnCollision)
+                ClientEventHandlers.handleCollisionAlert(browserWindow, headOnCollision);
+            }
           });
 
           return { success: true };
@@ -40,7 +48,7 @@ export default function setupCollisionEventHandlers(
 // allowed time difference for collision check
 const timeDiff = 5;//seconds
 
-function checkForCollision(flightA: FlightPath, flightB: FlightPath) : CollisionData | null {
+function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : CollisionData | null {
 
     if (!potentialCollision(flightA, flightB)) return null;
 
@@ -54,8 +62,8 @@ function checkForCollision(flightA: FlightPath, flightB: FlightPath) : Collision
     for (const intersection_point of flight_intersection) 
     {
         // if the intersection point not on both paths, skip it
-        if (!isPointOnPath(flightA.start_point, flightA.end_point, intersection_point)) continue;
-        if (!isPointOnPath(flightB.start_point, flightB.end_point, intersection_point)) continue;
+        if (!isPointOnPath(flightA.start_point, flightA.end_point, intersection_point) ||
+            !isPointOnPath(flightB.start_point, flightB.end_point, intersection_point)) continue;
 
         // distance from flight A start to intersection point
         const distA = Geodesic.WGS84.Inverse(
@@ -63,7 +71,7 @@ function checkForCollision(flightA: FlightPath, flightB: FlightPath) : Collision
             flightA.start_point.lon, 
             intersection_point.lat, 
             intersection_point.lon
-        ).s12!;
+        ).s12!; // <- ! tells the compiler to ignore the possibility of undefined
 
         // distance from flight B start to intersection point
         const distB = Geodesic.WGS84.Inverse(
@@ -109,6 +117,8 @@ function potentialCollision(flightA: FlightPath, flightB: FlightPath) : boolean 
     // if they can potentialy reach each other, check their heading
     const headingDiff = Math.abs(flightA.heading - flightB.heading);
 
+    console.log(`startToStart ${startToStart}, headingDiff ${headingDiff}`) //debug
+
     // if the paths are basically parallel and they are at least 50km from each other
     if (headingDiff <= 2.0 && startToStart >= pathDistanceLimit) return false;
 
@@ -133,7 +143,8 @@ function findIntersection(flightA: FlightPath, flightB: FlightPath) : { lat: num
     const length = VectorMath.vectorLength(crossP);
 
     // almost zero means the two great circles are coincident (same plane) —
-    // there is no single well-defined intersection point
+    // there is no single well-defined intersection point, so vector math doesn't work,
+    // we need to calculate using kinematics
     if (length < 1e-10) return null;
     
     // get the intersection vector and return the two possible lat/lon points of intersection on earth
@@ -149,7 +160,7 @@ function isPointOnPath(
   start: { lat: number; lon: number },
   end: { lat: number; lon: number },
   point: { lat: number; lon: number },
-  exceedBoundry = 50 //meters
+  exceedBoundry = 50//meters
 ): boolean 
 {
   const total = Geodesic.WGS84.Inverse(start.lat, start.lon, end.lat, end.lon).s12!;
@@ -157,4 +168,47 @@ function isPointOnPath(
   const pointToEnd = Geodesic.WGS84.Inverse(point.lat, point.lon, end.lat, end.lon).s12!;
 
   return Math.abs(startToPoint + pointToEnd - total) <= exceedBoundry;
+}
+
+// if the planes are basicaly on the same exact path (great circle)
+function checkHeadOnCollision(flightA: FlightPath, flightB: FlightPath): CollisionData | null {        
+
+    const headingDiff = Math.abs(flightA.heading - flightB.heading);
+
+    // directly heading towards each other
+    if (headingDiff <= 180 || headingDiff >= 177) 
+    {
+        const collisTime = KinematicMath.timeToReachHeadOnCollisionPoint(
+            flightA.start_point, flightB.start_point,
+            flightA.aircraft.initial_velocity, flightB.aircraft.initial_velocity,
+            flightA.aircraft.acceleration, flightB.aircraft.acceleration
+        );
+
+        if (collisTime === null) return null;
+
+        // d = v*t + 0.5 * a * t^2
+        const distanceToCollis = flightA.aircraft.initial_velocity * collisTime + 
+            0.5 * flightA.aircraft.acceleration * collisTime ** 2;
+
+        if (!distanceToCollis) return null;
+
+        // get the point of collision based on plane A's starting position, direction, and distance
+        const collisPoint = Geodesic.WGS84.Direct(
+            flightA.start_point.lat, flightA.start_point.lon,
+            flightA.heading, distanceToCollis
+        );
+
+        if (collisPoint) {
+            return {
+                planeA: flightA.aircraft,
+                planeB: flightB.aircraft,
+                time_of_collision: collisTime,
+                coordinates: { 
+                    lat: collisPoint.lat2!,
+                    lon: collisPoint.lon2!
+                }
+            };
+        };        
+    }
+    return null;
 }

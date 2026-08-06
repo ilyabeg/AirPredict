@@ -7,8 +7,8 @@ export default function CollisionControl() {
   const [activeCollisions, setActiveCollisions] = useState<CollisionData[]>([]);
 
   useEffect(() => {
-    const handleNewCollision = (e: any) => {
-      const newCollision: CollisionData = e.detail;
+    const handleNewCollision = (event: any) => {
+      const newCollision: CollisionData = event.detail;
       
       // Add the new crash to the array, keeping all previous crashes too
       setActiveCollisions((prevCrashes) => [...prevCrashes, newCollision]);

@@ -66,7 +66,7 @@ export default function collisionDisplayCard({collision}: CollisionDataProp) {
       <Card className="collision-container">
         
         {/* pb: '16px' is an MUI shortcut that fixes a weird default padding issue on CardContent */}
-        <CardContent sx={{ pb: '16px !important' }}>
+        <CardContent sx={{ pb: '16px !important' }}> {/* important! tells MUI to override it's deafult settings */}
           
           {/* Title */}
           <Box className="collision-title">

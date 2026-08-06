@@ -28,6 +28,7 @@ export default function App() {
           timeline={false}
           animation={false}
           sceneModePicker={false}
+          infoBox={false} // disables the gray popup box in the top right
           >          
 
           {/* clicking logic */}

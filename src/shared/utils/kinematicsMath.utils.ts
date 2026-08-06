@@ -1,3 +1,4 @@
+import { Geodesic } from 'geographiclib-geodesic';
 
 // get the time to reach the distance
 export function timeToReachDistance(
@@ -25,9 +26,37 @@ export function timeToReachDistance(
   const solution1 = (-b + sqrtDisc) / (2 * a);
   const solution2 = (-b - sqrtDisc) / (2 * a);
 
-  const timeSolutions = [solution1, solution2].filter(t => t > 0); // get only the positive time solutions
+  const timeSolutions = [solution1, solution2].filter(time => time > 0); // get only the positive time solutions
 
   // if there is at least 1 solution return the earliest
   return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null; 
   // ... = spread operator -> return the min element inside the array
+}
+
+// head on collision, x1(t) = x2(t) gives us the time of the collision
+export function timeToReachHeadOnCollisionPoint(
+  startPoint1: {lat: number, lon: number},
+  startPoint2: {lat: number, lon: number},
+  initialVelocity1: number,
+  initialVelocity2: number,
+  acceleration1: number,
+  acceleration2: number
+) : number | null {
+
+  const A = (acceleration1 - acceleration2) / 2;
+  const B = initialVelocity1 - initialVelocity2;
+   // distance between the two starting points (|x1 - x2|)
+  const C = Geodesic.WGS84.Inverse(startPoint1.lat, startPoint1.lon, startPoint2.lat, startPoint2.lon).s12!;
+  const discriminant = B ** 2 - 4 * A * C;
+
+  if (discriminant < 0) return null; // no solutions
+
+  const sqrtDisc = Math.sqrt(discriminant);
+  const solution1 = (-B + sqrtDisc) / (2 * A);
+  const solution2 = (-B - sqrtDisc) / (2 * A);
+
+  const timeSolutions = [solution1, solution2].filter(time => time > 0); // get only the positive time solutions
+  
+  // if there is at least 1 solution return the earliest
+  return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null;
 }

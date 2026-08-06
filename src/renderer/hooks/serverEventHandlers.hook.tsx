@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { IpcRendererEvent } from 'electron';
 import { ErrorMessage } from '../../shared/Types/ErrorMessage';
 import { offServerEvent, onServerEvent } from '../IPC/OnServerEvent';
@@ -16,6 +16,7 @@ export default function useServerEventHandlers() {
     []
   );
 
+  // callback function for collision alerts and displaying them in the UI
   const collisionAlertHandler = useCallback(
     (_event: IpcRendererEvent, collision: CollisionData) => {
       console.warn(`
@@ -29,7 +30,7 @@ export default function useServerEventHandlers() {
     []
   );
 
-  // a promise that these functions will be disposed when the components die
+  // a promise that these functions will be disposed when the components die (unmount)
   useEffect(() => {
     onServerEvent('error_message', errorMessageHandler, false);
     onServerEvent('collision_alert', collisionAlertHandler, false);

@@ -10,12 +10,12 @@ html, body, #root {
 
 .body-container {
   display: flex;
-  flex-direction: column; /* Stacks children vertically (header top, content bottom) */
+  flex-direction: column;
   height: 100%;
   margin: 0;
 }
 
 .main-content {
-  flex: 1; /* Tells the content to fill the remaining vertical space */
+  flex: 1;
   position: relative;
 }
