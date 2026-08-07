@@ -1,7 +1,7 @@
 .app-header {
   display: flex;
-  justify-content: space-between; /* Pushes title to left, button to right */
-  align-items: center; /* Vertically centers them */
+  /* justify-content: space-between; */
+  align-items: center;
   background-color: #1a1a1a;
   padding: 0 24px;
   height: 64px;
@@ -12,11 +12,10 @@
 }
 
 .header-title {
-  margin: 0;
+  margin-right: auto;
   font-size: 2.4rem;
   font-weight: 700; 
-  letter-spacing: -0.5px; /* Tightens the letters for a modern tech logo feel */
-  /* This creates a beautiful, subtle silver/white gradient on the text */
+  letter-spacing: -3.6px;
   background: linear-gradient(90deg, #ffffff, #858b95);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent; 
@@ -28,27 +27,24 @@
     transform: scale(1.05);
 }
 
-.add-flight-btn {
+button {
+  margin: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #2563eb;
-  color: #ffffff;
+  background: linear-gradient(90deg, #ffffff, #858b95);
+  color: #1a1a1a;
   border: none;
-  padding: 0 16px;
+  padding: 16px;
   height: 34px;
   font-size: 0.85rem;
   font-weight: 600;
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15); /* Subtle depth */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
 }
 
-.add-flight-btn:hover {
-  background-color: #1d4ed8;
-}
-
-.add-flight-btn:active {
-  transform: scale(0.97); /* Adds a satisfying 'click' press effect */
+button:active {
+  transform: scale(0.95);
 }

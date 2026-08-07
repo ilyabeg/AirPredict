@@ -125,6 +125,7 @@ function potentialCollision(flightA: FlightPath, flightB: FlightPath) : boolean 
     return true; // can potentialy collide
 }
 
+const minVectorLength = 0.0001;
 function findIntersection(flightA: FlightPath, flightB: FlightPath) : { lat: number; lon: number }[] | null
 {
     // get start, end vector for flight A
@@ -145,7 +146,7 @@ function findIntersection(flightA: FlightPath, flightB: FlightPath) : { lat: num
     // almost zero means the two great circles are coincident (same plane) —
     // there is no single well-defined intersection point, so vector math doesn't work,
     // we need to calculate using kinematics
-    if (length < 1e-10) return null;
+    if (length < minVectorLength) return null;
     
     // get the intersection vector and return the two possible lat/lon points of intersection on earth
     const intersectionVec = VectorMath.normalize(crossP);
