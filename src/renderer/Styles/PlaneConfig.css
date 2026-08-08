@@ -25,6 +25,16 @@
   font-weight: bold;
 }
 
+.user-input {
+  display: flex;
+  align-items: center;
+  color: #d8d8d8;
+  background-color: rgba(86, 86, 86, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  font-weight: lighter;
+}
+
 button {
   margin: 4px;
   display: flex;

@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useContext } from 'react';
 import * as Cesium from 'cesium';
 import invokeServer from '../IPC/InvokeServer'; 
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium, Entity } from 'resium';
@@ -14,13 +14,28 @@ export default function RightClickEarth() {
     const handleRightClick = async (movement: any) => {
         if (!viewer || !movement.position) return;
 
-        //
+        try {
+            // get the feature of the picked place (the click)
+            const pickedFeature = viewer.scene.pick(movement.position);
+            if (!Cesium.defined(pickedFeature)) 
+                return; // nothing picked
 
-        // remove the flight path from UI
-        flightsContextProp.setFlights(prev => prev.filter(flight => flight.aircraft.id !== "planeA"));
+            // if the picked point is an entity (meaning flight path), remove it
+            if (pickedFeature instanceof Cesium.Entity) 
+            {
+                // remove the flight path from UI
+                flightsContextProp.setFlights(prev => prev.filter(flight => flight.aircraft.id !== pickedFeature.id));
 
-        // register the flight in the backend
-        invokeServer('remove_flight', "planeA");
+                // register the flight in the backend
+                invokeServer('remove_flight', pickedFeature.id);
+            } else {
+                // not an entity
+                return;
+            }
+        }
+        catch (error) {
+            console.error('IPC bridge failed:', error);
+        }
     };
 
     return (

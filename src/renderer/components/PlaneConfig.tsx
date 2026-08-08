@@ -29,6 +29,7 @@ export default function PlaneConfig() {
                         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                             Aircraft ID:
                         </Typography>
+                        <input className="user-input" placeholder='enter ID (optional)...' />
                     </Box>
 
                     <Box className="setting">
@@ -36,6 +37,7 @@ export default function PlaneConfig() {
                         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                             Initial Velocity:
                         </Typography>
+                        <input className="user-input" placeholder='enter velocity...' />
                     </Box>
 
                      <Box className="setting">
@@ -43,6 +45,7 @@ export default function PlaneConfig() {
                         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                             Acceleration:
                         </Typography>
+                        <input className="user-input" placeholder='enter acceleration...' />
                     </Box>
 
                     <Box>

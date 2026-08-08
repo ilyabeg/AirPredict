@@ -55,7 +55,7 @@ export default function LeftClickEarth() {
           // add the new flight
           const newFlight: FlightPath = {
             aircraft: {
-              id: "planeA",  //window.crypto.randomUUID(), // generate a unique ID for the plane
+              id: window.crypto.randomUUID(),
               initial_velocity: 1, // temp for debug
               acceleration: 0,
               heading: result.heading        

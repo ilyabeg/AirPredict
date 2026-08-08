@@ -28,8 +28,7 @@ export default function EarthClickControl() {
 
             {/* loop through all saved flights and draw them */}
             {allFlights.map((flight) => (
-            <React.Fragment key={flight.aircraft.id}>
-    
+            <>
                 {/* Start Pin */}
                 <FlightPin lat={flight.start_point.lat} lon={flight.start_point.lon} color={Cesium.Color.RED} />
                 
@@ -38,17 +37,18 @@ export default function EarthClickControl() {
                 
                 {/* the connecting line */}
                 <Entity
+                    id={flight.aircraft.id} // give the line an id to remove
                     polyline={{
                         positions: Cesium.Cartesian3.fromDegreesArray([
                         flight.start_point.lon, flight.start_point.lat,
-                        flight.end_point!.lon, flight.end_point!.lat
+                        flight.end_point.lon, flight.end_point.lat
                         ]),
                         width: 3,
                         material: Cesium.Color.RED,
                         clampToGround: false
                     }}
                 />
-            </React.Fragment>
+            </>
             ))}
         </>
     );
