@@ -38,15 +38,15 @@ export default function EarthClickControl() {
                 
                 {/* the connecting line */}
                 <Entity
-                polyline={{
-                    positions: Cesium.Cartesian3.fromDegreesArray([
-                    flight.start_point.lon, flight.start_point.lat,
-                    flight.end_point!.lon, flight.end_point!.lat
-                    ]),
-                    width: 3,
-                    material: Cesium.Color.RED,
-                    clampToGround: false,
-                }}
+                    polyline={{
+                        positions: Cesium.Cartesian3.fromDegreesArray([
+                        flight.start_point.lon, flight.start_point.lat,
+                        flight.end_point!.lon, flight.end_point!.lat
+                        ]),
+                        width: 3,
+                        material: Cesium.Color.RED,
+                        clampToGround: false
+                    }}
                 />
             </React.Fragment>
             ))}
