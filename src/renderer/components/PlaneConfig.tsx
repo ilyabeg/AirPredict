@@ -1,9 +1,57 @@
+import { Card, CardContent, Typography, Box, Divider } from '@mui/material';
+import SpeedIcon from '@mui/icons-material/Speed';
+import AirplaneIcon from '@mui/icons-material/AirplanemodeActive';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import '../Styles/PlaneConfig.css';
 
-// tmporary plane configuration component
 export default function PlaneConfig() {
     return (
         <>
-            <h1 style={{color:"white"}}>HEllo Plane config</h1>
+            {/* 'sx' allows to use css directly inside this component */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <Card className="container">
+                
+                {/* pb: '16px' is an MUI shortcut that fixes a weird default padding issue on CardContent */}
+                <CardContent sx={{ pb: '16px !important' }}> {/* important! tells MUI to override it's deafult settings */}
+                  
+                    {/* flight id */}
+                    <Box className="title">
+                        <Typography variant="body2">
+                        <strong>Plane Configuration</strong>
+                        </Typography>
+                    </Box>
+
+                    <Divider sx={{ backgroundColor: 'rgba(255,255,255,0.2)', mb: 1.5 }} />
+    
+                    {/* config settings */}
+                    <Box className="setting">
+                        <AirplaneIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                            Aircraft ID:
+                        </Typography>
+                    </Box>
+
+                    <Box className="setting">
+                        <SpeedIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                            Initial Velocity:
+                        </Typography>
+                    </Box>
+
+                     <Box className="setting">
+                        <RocketLaunchIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                            Acceleration:
+                        </Typography>
+                    </Box>
+
+                    <Box>
+                        <button>Done</button>
+                    </Box>
+
+                </CardContent>
+              </Card>
+            </Box>
         </>
     );
 }

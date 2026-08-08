@@ -1,30 +1,48 @@
 
-.config-container {
-  font-family: 'Arial', sans-serif;
-  text-align: center;
-  background-color: #f4f4f9;
-  border-radius: 10px;
-  padding: 20px;
-  max-width: 400px;
-  margin: 20px auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.container {
+  min-width: 250px;
+  background-color: rgba(30, 30, 30, 0.95) !important; 
+  color: white !important;
+  border: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .title {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 500; 
-  letter-spacing: -0.5px;
-  background: linear-gradient(90deg, #ffffff, #9ca3af);
-}
-
-.title:hover {
-    background-color: aliceblue;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  color: #d8d8d8;
+  font-weight: bold;
 }
 
 .setting {
-    font-size: 1.2em;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 150px;
-    padding: 15px;
+  display: flex;
+  align-items: center;
+  color: #d8d8d8;
+  background-color: rgba(86, 86, 86, 0.1);
+  padding: 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+button {
+  margin: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(90deg, #6f1bff, #8b28e3);
+  color: #1a1a1a;
+  border: none;
+  padding: 16px;
+  height: 34px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  transform: scale(0.95);
 }

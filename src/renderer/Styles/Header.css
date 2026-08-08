@@ -16,7 +16,7 @@
   font-size: 2.4rem;
   font-weight: 700; 
   letter-spacing: -3.6px;
-  background: linear-gradient(90deg, #ffffff, #858b95);
+  background: linear-gradient(90deg, white, #858b95);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent; 
   user-select: none; /* Prevents the user from highlighting it, making it act like a real logo */
@@ -32,7 +32,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(90deg, #ffffff, #858b95);
+  background: linear-gradient(90deg, #6f1bff, #8b28e3);
   color: #1a1a1a;
   border: none;
   padding: 16px;
@@ -42,7 +42,7 @@ button {
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.2s ease, transform 0.1s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 button:active {
