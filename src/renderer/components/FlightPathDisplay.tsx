@@ -32,16 +32,19 @@ export default function FlightPathDisplay(flight: FlightPath) {
                     {/* end point coordinates */}
                     <Box className="endpoint-style">
                         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            {/* toFixed() instead of Math.round() to keep percise number */}
                             End Point: {flight.end_point.lat.toFixed(10).slice(0, -5)}°, {flight.end_point.lon.toFixed(10).slice(0, -5)}°
                         </Typography>
                     </Box>
 
-                    {/* end point coordinates */}
+                    {/* distance & heading */}
                     <Box className="endpoint-style">
                         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            {/* toFixed() instead of Math.round() to keep percise number */}
-                            End Point: {flight.end_point.lat.toFixed(10).slice(0, -5)}°, {flight.end_point.lon.toFixed(10).slice(0, -5)}°
+                            Distance: {flight.distance.toFixed(10).slice(0, -5)}KM
+                        </Typography>
+                    </Box>
+                    <Box className="endpoint-style">
+                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                            Heading: {flight.heading}°
                         </Typography>
                     </Box>
         
