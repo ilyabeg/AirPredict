@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium, Entity } from 'resium';
+import { useState, useContext } from 'react';
+import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import * as Cesium from 'cesium';
 import invokeServer from '../IPC/InvokeServer'; 
 import FlightPin from './FlightPointPin';
@@ -89,31 +89,6 @@ export default function LeftClickEarth() {
 
       {/* temp violet start point */}
       {startPoint && (<FlightPin lat={startPoint.lat} lon={startPoint.lon} />)}
-
-      {/* Loop through all saved flights and draw them */}
-      {flightsContextProp.allFlights.map((flight) => (
-        <React.Fragment key={flight.aircraft.id}>
-
-          {/* Start Pin */}
-          <FlightPin lat={flight.start_point.lat} lon={flight.start_point.lon} color={Cesium.Color.RED} />
-          
-          {/* End Pin */}
-          <FlightPin lat={flight.end_point.lat} lon={flight.end_point.lon} color={Cesium.Color.RED} />
-          
-          {/* the connecting line */}
-          <Entity
-            polyline={{
-              positions: Cesium.Cartesian3.fromDegreesArray([
-                flight.start_point.lon, flight.start_point.lat,
-                flight.end_point!.lon, flight.end_point!.lat
-              ]),
-              width: 3,
-              material: Cesium.Color.RED,
-              clampToGround: false,
-            }}
-          />
-        </React.Fragment>
-      ))}
     </>
   );
 }
