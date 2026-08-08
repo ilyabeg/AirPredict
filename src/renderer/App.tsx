@@ -4,7 +4,7 @@ import Header from './components/Header';
 
 import { Viewer } from 'resium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
-import EarthClickHandler from './components/EarthClickHandler';
+import EarthClickControl from './components/EarthClickControl';
 import CollisionControl from './components/CollisionControl';
 
 (window as any).CESIUM_BASE_URL = '/cesium/';
@@ -31,8 +31,8 @@ export default function App() {
           infoBox={false} // disables the gray popup box in the top right
           >          
 
-          {/* clicking logic */}
-          <EarthClickHandler />
+          {/* clicking earth logic */}
+          <EarthClickControl />
 
           {/* collision displayer */}
           <CollisionControl />

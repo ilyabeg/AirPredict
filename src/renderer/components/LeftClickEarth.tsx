@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium, Entity } from 'resium';
 import * as Cesium from 'cesium';
 import invokeServer from '../IPC/InvokeServer'; 
 import FlightPin from './FlightPointPin';
 import { FlightPath } from 'shared/Types/FlightPath';
+import { FlightsContext } from './EarthClickControl';
 
-export default function EarthClickHandler() {
+
+const RAD_TO_DEG = 180 / Math.PI;
+
+export default function LeftClickEarth() {
   
   const { viewer } = useCesium(); // <- the actual 3D globe
   const [startPoint, setStartPoint] = useState<{ lat: number, lon: number } | null>(null);
-
-  // flights array
-  const [savedFlights, setSavedFlights] = useState<FlightPath[]>([]);
+  const flightsContextProp = useContext(FlightsContext);
+  if (!flightsContextProp) return;
 
   const handleLeftClick = async (movement: any) => {
     if (!viewer || !movement.position) return; // movement.position is the pixel position of the click
@@ -23,20 +26,23 @@ export default function EarthClickHandler() {
     );
 
     if (earthClick) {
-      // raycasting calculations
+      // raycasting calculations:
+
+      // returns a Cartographic object that represents the clicked position on the cesium viewer.scene
+      // defined by latitude, longitude (in radians) and height (which we ignore)
       const cartographic = Cesium.Cartographic.fromCartesian(earthClick);
-      const clickedLon = Cesium.Math.toDegrees(cartographic.longitude);
-      const clickedLat = Cesium.Math.toDegrees(cartographic.latitude);
+      const lon = cartographic.longitude * RAD_TO_DEG;
+      const lat = cartographic.latitude * RAD_TO_DEG;
 
       // display click for debugging
-      console.log(`Clicked Lat: ${clickedLat}, Lon: ${clickedLon}`);
+      console.log(`Clicked Lat: ${lat}, Lon: ${lon}`);
 
       if (!startPoint) {
         console.log('Start point saved! Click again for the end point.');
-        setStartPoint({ lat: clickedLat, lon: clickedLon });
+        setStartPoint({ lat: lat, lon: lon });
       } 
       else {
-        const endPoint = { lat: clickedLat, lon: clickedLon };
+        const endPoint = { lat: lat, lon: lon };
 
         try {
           // send to the backend
@@ -49,7 +55,7 @@ export default function EarthClickHandler() {
           // add the new flight
           const newFlight: FlightPath = {
             aircraft: {
-              id: window.crypto.randomUUID(), // generate a unique ID for the plane
+              id: "planeA",  //window.crypto.randomUUID(), // generate a unique ID for the plane
               initial_velocity: 1, // temp for debug
               acceleration: 0,
               heading: result.heading        
@@ -59,7 +65,7 @@ export default function EarthClickHandler() {
             distance: result.distance,
             heading: result.heading          
           };
-          setSavedFlights((prevFlights) => [...prevFlights, newFlight]); // like writing in C#: savedFlights += newFlight
+          flightsContextProp.setFlights((prevFlights) => [...prevFlights, newFlight]); // like writing in C#: savedFlights += newFlight
 
           // register the flight in the backend
           invokeServer('register_flight', newFlight);
@@ -85,7 +91,7 @@ export default function EarthClickHandler() {
       {startPoint && (<FlightPin lat={startPoint.lat} lon={startPoint.lon} />)}
 
       {/* Loop through all saved flights and draw them */}
-      {savedFlights.map((flight) => (
+      {flightsContextProp.allFlights.map((flight) => (
         <React.Fragment key={flight.aircraft.id}>
 
           {/* Start Pin */}

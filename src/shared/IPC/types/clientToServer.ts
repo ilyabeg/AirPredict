@@ -25,7 +25,7 @@ export interface IPCMethods {
     };
 
     remove_flight: {
-        request: FlightPath,
+        request: string, //<- flight path id
         response: { success: boolean };
     };
 }

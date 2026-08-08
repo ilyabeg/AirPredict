@@ -8,7 +8,7 @@ import * as ClientEventHandlers from '../handlers/clientNotificationHandlers';
 import { Geodesic } from 'geographiclib-geodesic';
 
 // all registered flights
-const all_flights: FlightPath[] = [];
+let all_flights: FlightPath[] = [];
 
 export default function setupCollisionEventHandlers(
   ipcMain: IpcMain,
@@ -16,34 +16,52 @@ export default function setupCollisionEventHandlers(
   forwardErrors: <T>(action: () => Promise<T>) => Promise<T | null>
 ) 
 {
+    // event dispatcher for adding a flight and a collision if there was one
     dispatchEvent('register_flight', ipcMain, async (newFlight: FlightPath) => {
         const res = await forwardErrors(async () =>
         {
-          // add flight to flights array
-          all_flights.push(newFlight);
+            // add flight to flights array
+            all_flights.push(newFlight);
 
-          // check for collisions
-          all_flights.forEach((existing) => {
-            const normal_collision = checkNormalCollision(newFlight, existing);
+            // check for collisions
+            all_flights.forEach((existing) => {
+                const normal_collision = checkNormalCollision(newFlight, existing);
 
-            // if they collided normally
-            if (normal_collision) {
-              ClientEventHandlers.handleCollisionAlert(browserWindow, normal_collision);
-            } 
-            else {
-              // if they collided head on
-              const headOnCollision = checkHeadOnCollision(newFlight, existing);
-              if (headOnCollision)
-                ClientEventHandlers.handleCollisionAlert(browserWindow, headOnCollision);
-            }
+                // if they collided normally
+                if (normal_collision) {
+                ClientEventHandlers.handleCollisionAlert(browserWindow, normal_collision);
+                } 
+                else {
+                // if they collided head on
+                const headOnCollision = checkHeadOnCollision(newFlight, existing);
+                if (headOnCollision)
+                    ClientEventHandlers.handleCollisionAlert(browserWindow, headOnCollision);
+                }
           });
-
           return { success: true };
         });
+        
+        if (!res) throw new Error('Error occurred while registering flight.');
+        return res;
+    });
+
+    // event dispatcher for removing flights by the flight id (which is the aircraft id)
+    dispatchEvent("remove_flight", ipcMain, async (flightID: string) => {
+        const res = await forwardErrors(async () =>
+        {
+            // remove the provided flight
+            all_flights = all_flights.filter(flight => flight.aircraft.id !== flightID);
+            return { success: true };
+        });
+
         if (!res) throw new Error('Error occurred while registering flight.');
         return res;
     });
 }
+
+
+
+// ***************** collision calculations **********
 
 // allowed time difference for collision check
 const timeDiff = 5;//seconds

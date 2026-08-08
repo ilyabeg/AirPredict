@@ -30,11 +30,11 @@ export default function useServerEventHandlers() {
     []
   );
 
-  // a promise that these functions will be disposed when the components die (unmount)
   useEffect(() => {
     onServerEvent('error_message', errorMessageHandler, false);
     onServerEvent('collision_alert', collisionAlertHandler, false);
 
+      // a promise that these functions will be disposed when the components die (unmount)
     return () => {
       offServerEvent('error_message', errorMessageHandler);
       offServerEvent('collision_alert', collisionAlertHandler);

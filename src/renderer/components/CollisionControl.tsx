@@ -12,6 +12,7 @@ export default function CollisionControl() {
       
       // Add the new crash to the array, keeping all previous crashes too
       setActiveCollisions((prevCrashes) => [...prevCrashes, newCollision]);
+      // React prvious state: updtaes the previous values with an updater function instead of passing by value
     };
 
     // attach the listener to the window
