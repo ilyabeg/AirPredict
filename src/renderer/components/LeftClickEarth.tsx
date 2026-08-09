@@ -56,8 +56,8 @@ export default function LeftClickEarth() {
           const newFlight: FlightPath = {
             aircraft: {
               id: window.crypto.randomUUID(),
-              initial_velocity: 1, // temp for debug
-              acceleration: 0,
+              initial_velocity: 25, // temp for debug
+              acceleration: 10,
               heading: result.heading        
             }, 
             start_point: startPoint,

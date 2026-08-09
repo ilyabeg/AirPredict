@@ -5,7 +5,7 @@ import RightClickEarth from "../components/RightClickEarth";
 import FlightPin from './FlightPointPin';
 import MovingDot from "./MovingDot";
 import * as Cesium from 'cesium';
-import { Entity } from 'resium';
+import { Entity, useCesium } from 'resium';
 
 
 interface FlightContextProp {
@@ -18,6 +18,13 @@ export default function EarthClickControl() {
 
     // flights array
     const [allFlights, setFlights] = useState<FlightPath[]>([]);
+    
+    const cesiumContext = useCesium(); // <- all cesium main components such as viewer, scene ...
+    if (!cesiumContext.viewer) return;
+    
+    // config a master start time for all the application flights
+    const appFlightsStartTime = Cesium.JulianDate.fromDate(new Date());
+    setViewerClockConfig(cesiumContext.viewer, appFlightsStartTime);
 
     return(
         <>
@@ -50,9 +57,15 @@ export default function EarthClickControl() {
                 />
 
                 {/* moving plane dot */}
-                <MovingDot flight={flight}/>
+                <MovingDot flight={flight} flightStartTime={appFlightsStartTime} />
             </>
             ))}
         </>
     );
+}
+
+function setViewerClockConfig(viewer: any, start: Cesium.JulianDate) : void {
+    viewer.clock.startTime = start.clone();
+    viewer.clock.currentTime = start.clone();
+    viewer.clock.multiplier = 10;
 }

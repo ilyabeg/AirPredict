@@ -5,43 +5,36 @@ import { positionAtTime, timeToReachDistance } from '../../shared/utils/kinemati
 import { FlightPath } from 'shared/Types/FlightPath';
 
 interface MovingDotProps {
-    flight: FlightPath
+    flight: FlightPath,
+    flightStartTime: Cesium.JulianDate
 }
 
-export default function MovingDot({flight}: MovingDotProps) {
+export default function MovingDot({flight, flightStartTime}: MovingDotProps) {
 
     const cesiumContext = useCesium(); // world viewer
     if (!cesiumContext.viewer) return;
 
     // total flight time in seconds
-    const flightTime = timeToReachDistance(
+    const totalFlightTime = timeToReachDistance(
         flight.distance,
         flight.aircraft.initial_velocity,
         flight.aircraft.acceleration
     );
-    if (!flightTime) return;
-    console.log(`total flight time supposed to be: ~${Math.round(flightTime/60)} minutes`); // debug check
+    if (!totalFlightTime) return;
+    console.log(`total flight time supposed to be: ~${Math.round(totalFlightTime/60)} minutes`); // debug check
 
     // start and end dates and time
-    const startTime = Cesium.JulianDate.fromDate(new Date());
-    const endTime = Cesium.JulianDate.addSeconds(startTime, flightTime, new Cesium.JulianDate());
-    console.log(`flight start time: ${startTime}; end time: ${endTime}`); // debug check
-
-    // viewer clock configuration
-    setViewerClockConfig(cesiumContext.viewer, startTime, endTime);
+    const flightEndTime = Cesium.JulianDate.addSeconds(flightStartTime, totalFlightTime, new Cesium.JulianDate());
+    console.log(`flight start time: ${flightStartTime}; end time: ${flightEndTime}`); // debug check
     
     // sample flight 3d positions over time
     const computeFlight = () => {
         const sampleProperty = new Cesium.SampledPositionProperty();
         
-        // add flight sample every 60 seconds
-        let seconds = 0;
-        do {
-            if (seconds > flightTime) seconds = flightTime;
-            
-            const res = calculatePosAndTime(flight, seconds, startTime);
+        // add flight sample every 60 seconds        
+        for (let seconds = 0; seconds <= totalFlightTime; seconds += 60) {
+            const res = calculatePosAndTime(flight, seconds, flightStartTime);
             sampleProperty.addSample(res.time, res.position);
-            seconds += 60;    
 
             // sample points for debug
             // console.log(`sample point at ${res.time} sec`);
@@ -55,7 +48,9 @@ export default function MovingDot({flight}: MovingDotProps) {
             //     },
             // });
         }
-        while (seconds <= flightTime);
+        //in case were greater than the final end point time
+        const res = calculatePosAndTime(flight, totalFlightTime, flightStartTime);
+        sampleProperty.addSample(res.time, res.position);
 
         return sampleProperty;
     };
@@ -65,29 +60,27 @@ export default function MovingDot({flight}: MovingDotProps) {
     return (
         <>
             <Entity
+                //availability = when the entity is visible
                 availability={ 
                     new Cesium.TimeIntervalCollection([
                         new Cesium.TimeInterval({
-                            start: startTime,
-                            stop: endTime
+                            start: flightStartTime,
+                            stop: flightEndTime
                     })
                 ])}
 
                 position={dotPositions}
 
-                // calculate orientation automaticaly based on position movement
-                orientation={new Cesium.VelocityOrientationProperty(dotPositions)}
-
                 point={{
                     pixelSize: 12,
                     color: Cesium.Color.YELLOW,
                     outlineColor: Cesium.Color.WHITE,
-                    outlineWidth: 2,
+                    outlineWidth: 1,
                     disableDepthTestDistance: 99999,
                 }}
 
                 // model={{
-                //     uri: "../../SampleData/models/CesiumAir/Cesium_Air.glb",
+                //     uri: "/models/CesiumAir/Cesium_Air.glb",
                 //     minimumPixelSize: 64
                 // }}
             />
@@ -97,13 +90,6 @@ export default function MovingDot({flight}: MovingDotProps) {
 
 
 // ************** helper methods *******************
-
-function setViewerClockConfig(viewer: any, start: Cesium.JulianDate, end: Cesium.JulianDate) : void {
-    viewer.clock.startTime = start.clone();
-    viewer.clock.stopTime = end.clone();
-    viewer.clock.currentTime = start.clone();
-    viewer.clock.multiplier = 10;
-}
 
 // calculates the time and position of the flight at a given 'seconds' offset from the flight start
 function calculatePosAndTime(
