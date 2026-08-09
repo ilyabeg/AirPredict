@@ -3,6 +3,7 @@ import { FlightPath } from "../../shared/Types/FlightPath";
 import LeftClickEarth from "../components/LeftClickEarth";
 import RightClickEarth from "../components/RightClickEarth";
 import FlightPin from './FlightPointPin';
+import MovingDot from "./MovingDot";
 import * as Cesium from 'cesium';
 import { Entity } from 'resium';
 
@@ -11,7 +12,6 @@ interface FlightContextProp {
     allFlights: FlightPath[],
     setFlights: React.Dispatch<React.SetStateAction<FlightPath[]>>
 }
-
 export const FlightsContext = createContext<FlightContextProp | null>(null);
 
 export default function EarthClickControl() {
@@ -48,6 +48,9 @@ export default function EarthClickControl() {
                         clampToGround: false
                     }}
                 />
+
+                {/* moving plane dot */}
+                <MovingDot flight={flight}/>
             </>
             ))}
         </>

@@ -50,7 +50,7 @@ export default function LeftClickEarth() {
             start_point: startPoint,
             end_point: endPoint
           });
-          console.log(`Calculated distance: ${result.distance}km`);
+          console.log(`Calculated distance: ${result.distance / 1000}km`);
 
           // add the new flight
           const newFlight: FlightPath = {

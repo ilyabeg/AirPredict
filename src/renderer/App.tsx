@@ -24,11 +24,10 @@ export default function App() {
           full 
           geocoder={false} 
           baseLayer={false}
-          //baseLayerPicker={false}
-          timeline={false}
-          animation={false}
+          timeline={true}
           sceneModePicker={false}
           infoBox={false} // disables the gray popup box in the top right
+          shouldAnimate={true}
           >          
 
           {/* clicking earth logic */}

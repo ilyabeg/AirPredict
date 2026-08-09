@@ -17,7 +17,7 @@ export default function FlightPin({ lat, lon, color = Cesium.Color.VIOLET }: Fli
         color: color,
         outlineColor: Cesium.Color.WHITE,
         outlineWidth: 2,
-        disableDepthTestDistance: Number.POSITIVE_INFINITY,
+        disableDepthTestDistance: 99999,
       }}
     />
   );

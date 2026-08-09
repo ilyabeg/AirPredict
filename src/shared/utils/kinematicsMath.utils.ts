@@ -1,4 +1,5 @@
 import { Geodesic } from 'geographiclib-geodesic';
+import { FlightPath } from 'shared/Types/FlightPath';
 
 // get the time to reach the distance
 export function timeToReachDistance(
@@ -7,7 +8,7 @@ export function timeToReachDistance(
   acceleration: number
 ): number | null 
 {
-  if (Math.abs(acceleration) === 0) {
+  if (acceleration === 0) {
     if (initialVelocity <= 0)
         return null; // never gets there
     return distance / initialVelocity;
@@ -59,4 +60,33 @@ export function timeToReachHeadOnCollisionPoint(
   
   // if there is at least 1 solution return the earliest
   return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null;
+}
+
+export function positionAtTime(
+  flight: FlightPath,
+  time: number
+) : {lat: number, lon: number} | null {
+
+  const initialVelocity = flight.aircraft.initial_velocity;
+  const acceleration = flight.aircraft.acceleration;
+
+  if (initialVelocity <= 0) return null; // never gets there
+
+  // d(t) = v*t + 0.5 * a * t^2 = distance after time t
+  const distance = (initialVelocity * time) + (0.5 * acceleration * time ** 2);
+
+  // the position after flying 'distance' from 'start_point'
+  const res = Geodesic.WGS84.Direct(
+    flight.start_point.lat, flight.start_point.lon,
+    flight.heading, distance
+  );
+
+  if (res) {
+    return {
+      lat: res.lat2!,
+      lon: res.lon2!
+    };
+  }
+  
+  return null;
 }

@@ -20,14 +20,19 @@ export default function RightClickEarth() {
             if (!Cesium.defined(pickedFeature)) 
                 return; // nothing picked
 
+            console.log(pickedFeature); // debug
+
             // if the picked point is an entity (meaning flight path), remove it
-            if (pickedFeature instanceof Cesium.Entity) 
+            if (pickedFeature.id) // <- pickedFeature.id instanceof Cesium.Entity
             {
+                const pickedFlightID = pickedFeature.id.id; // id of the entity itself
+                console.log(`removing flight: ${pickedFlightID}`);
+
                 // remove the flight path from UI
-                flightsContextProp.setFlights(prev => prev.filter(flight => flight.aircraft.id !== pickedFeature.id));
+                flightsContextProp.setFlights(prev => prev.filter(flight => flight.aircraft.id !== pickedFlightID));
 
                 // register the flight in the backend
-                invokeServer('remove_flight', pickedFeature.id);
+                invokeServer('remove_flight', pickedFlightID); 
             } else {
                 // not an entity
                 return;
