@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import '../Styles/Header.css';
 import PlaneConfig from './PlaneConfig';
+import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 
 export default function Header() {
 
-    const [planeConVis, setVisibility] = useState<boolean>(false);
+    const [planeConfVisibility, setVisibility] = useState<boolean>(false);
 
     const handleClick = () => {
         setVisibility(true);
@@ -12,10 +13,12 @@ export default function Header() {
 
     return (
         <header className="app-header">
+            <div className='planes-img'>
+                <ConnectingAirportsIcon sx={{ fontSize: 45, mt: 1, mr: .5, color: 'whitesmoke' }} />
+            </div>
             <h1 className="header-title">AirPredict</h1>
             <button onClick={handleClick}>Add Flight</button>
-            <button >Remove Flight</button>
-            {planeConVis && <PlaneConfig />}
+            {planeConfVisibility && <PlaneConfig />}
         </header>
     );
 }

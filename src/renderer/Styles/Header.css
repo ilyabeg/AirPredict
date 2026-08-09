@@ -23,8 +23,8 @@
 }
 
 .header-title:hover {
-    transition: 0.2s ease;
-    transform: scale(1.05);
+  transition: 0.2s ease;
+  transform: scale(1.05);
 }
 
 button {
@@ -47,4 +47,9 @@ button {
 
 button:active {
   transform: scale(0.95);
+}
+
+.planes-img:hover {
+  transition: 0.2s ease;
+  transform: scale(1.10);
 }
