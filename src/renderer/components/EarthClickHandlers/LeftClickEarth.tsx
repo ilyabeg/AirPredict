@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import * as Cesium from 'cesium';
-import invokeServer from '../IPC/InvokeServer'; 
-import FlightPin from './FlightPointPin';
+import invokeServer from '../../IPC/InvokeServer'; 
+import FlightPin from '../FlightPointPin';
 import { FlightPath } from 'shared/Types/FlightPath';
 import { FlightsContext } from './EarthClickControl';
 
@@ -14,10 +14,10 @@ export default function LeftClickEarth() {
   const { viewer } = useCesium(); // <- the actual 3D globe
   const [startPoint, setStartPoint] = useState<{ lat: number, lon: number } | null>(null);
   const flightsContextProp = useContext(FlightsContext);
-  if (!flightsContextProp) return;
+  if (!flightsContextProp || !viewer) return;
 
-  const handleLeftClick = async (movement: any) => {
-    if (!viewer || !movement.position) return; // movement.position is the pixel position of the click
+  const handleClick = async (movement: any) => {
+    if (!movement.position) return; // movement.position is the pixel position of the click
 
     // coverting the pixel position to a cartesian 3D vector on the globe
     const earthClick = viewer.camera.pickEllipsoid(
@@ -84,7 +84,7 @@ export default function LeftClickEarth() {
   return (
     <>
       <ScreenSpaceEventHandler>
-        <ScreenSpaceEvent action={handleLeftClick} type={Cesium.ScreenSpaceEventType.LEFT_CLICK} />
+        <ScreenSpaceEvent action={handleClick} type={Cesium.ScreenSpaceEventType.LEFT_CLICK} />
       </ScreenSpaceEventHandler>
 
       {/* temp violet start point */}

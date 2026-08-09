@@ -1,9 +1,9 @@
 import React, { createContext, useState } from "react";
-import { FlightPath } from "../../shared/Types/FlightPath";
-import LeftClickEarth from "../components/LeftClickEarth";
-import RightClickEarth from "../components/RightClickEarth";
-import FlightPin from './FlightPointPin';
-import MovingDot from "./MovingDot";
+import { FlightPath } from "../../../shared/Types/FlightPath";
+import LeftClickEarth from "./LeftClickEarth";
+import RightClickEarth from "./RightClickEarth";
+import FlightPin from '../FlightPointPin';
+import MovingDot from "../MovingDot";
 import * as Cesium from 'cesium';
 import { Entity, useCesium } from 'resium';
 
@@ -31,6 +31,7 @@ export default function EarthClickControl() {
             <FlightsContext.Provider value={{allFlights, setFlights}}>
                 <LeftClickEarth/>
                 <RightClickEarth/>
+                
             </FlightsContext.Provider>
 
             {/* loop through all saved flights and draw them */}

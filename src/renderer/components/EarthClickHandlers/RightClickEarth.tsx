@@ -1,18 +1,18 @@
 import { useContext } from 'react';
 import * as Cesium from 'cesium';
-import invokeServer from '../IPC/InvokeServer'; 
+import invokeServer from '../../IPC/InvokeServer'; 
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium, Entity } from 'resium';
 import { FlightsContext } from './EarthClickControl';
 
 
 export default function RightClickEarth() {
 
-    const { viewer } = useCesium(); // <- the actual 3D globe
+    const { viewer } = useCesium(); // <- the actual 3D globe container
     const flightsContextProp = useContext(FlightsContext);
-    if (!flightsContextProp) return;
+    if (!flightsContextProp || !viewer) return;
     
-    const handleRightClick = async (movement: any) => {
-        if (!viewer || !movement.position) return;
+    const handleClick = async (movement: any) => {
+        if (!movement.position) return;
 
         try {
             // get the feature of the picked place (the click)
@@ -20,7 +20,7 @@ export default function RightClickEarth() {
             if (!Cesium.defined(pickedFeature)) 
                 return; // nothing picked
 
-            console.log(pickedFeature); // debug
+            // console.log(`picked feature: ${pickedFeature}`); // debug
 
             // if the picked point is an entity (meaning flight path), remove it
             if (pickedFeature.id) // <- pickedFeature.id instanceof Cesium.Entity
@@ -46,7 +46,7 @@ export default function RightClickEarth() {
     return (
         <>
             <ScreenSpaceEventHandler>
-                <ScreenSpaceEvent action={handleRightClick} type={Cesium.ScreenSpaceEventType.RIGHT_CLICK} />
+                <ScreenSpaceEvent action={handleClick} type={Cesium.ScreenSpaceEventType.RIGHT_CLICK} />
             </ScreenSpaceEventHandler>
         </>
     );

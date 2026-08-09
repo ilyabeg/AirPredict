@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CollisionData } from 'shared/Types/CollisionData';
-import CollisionDisplayCard from '../components/CollisionDisplayCard';
+import CollisionDisplayCard from './CollisionDisplayCard';
 
 export default function CollisionControl() {
 

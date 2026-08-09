@@ -4,7 +4,11 @@ import FlightLandIcon from '@mui/icons-material/FlightLand';
 import GlobeIcon from '@mui/icons-material/Public';
 import { FlightPath } from 'shared/Types/FlightPath';
 
-export default function FlightPathDisplay(flight: FlightPath) {
+interface FlightPathDisplayProps {
+    flight: FlightPath
+}
+
+export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
     return (
         <>
             {/* 'sx' allows to use css directly inside this component */}

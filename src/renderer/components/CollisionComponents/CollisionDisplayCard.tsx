@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { CollisionData } from 'shared/Types/CollisionData';
-import '../Styles/CollisionCard.css'; 
+import '../../Styles/CollisionCard.css'; 
 import { useCesium } from 'resium';
 import * as Cesium from 'cesium';
-import CollisionCardHTML from '../components/CollisonCardHTML';
+import CollisionCardHTML from '../CollisionComponents/CollisonCardHTML';
 
 // React wraps objects in a Prop object
 interface CollisionDataProp {

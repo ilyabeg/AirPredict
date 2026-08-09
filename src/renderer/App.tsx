@@ -4,8 +4,8 @@ import Header from './components/Header';
 
 import { Viewer } from 'resium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
-import EarthClickControl from './components/EarthClickControl';
-import CollisionControl from './components/CollisionControl';
+import EarthClickControl from './components/EarthClickHandlers/EarthClickControl';
+import CollisionControl from './components/CollisionComponents/CollisionControl';
 
 (window as any).CESIUM_BASE_URL = '/cesium/';
 
