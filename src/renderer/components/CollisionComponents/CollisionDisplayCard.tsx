@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { CollisionData } from 'shared/Types/CollisionData';
 import '../../Styles/CollisionCard.css'; 
 import { useCesium } from 'resium';
@@ -13,6 +13,8 @@ interface CollisionDataProp {
 export default function collisionDisplayCardHandler({collision}: CollisionDataProp) {
 
   const { viewer } = useCesium();
+
+  // useRef = remembers information without causing a re-render when its state changes (unlike useState)
   const cardRef = useRef<HTMLDivElement>(null); 
   // HTMLDivElement is an interface of a <div> tag, this allows us to use div properties
   // like .style, .id, .className
@@ -47,7 +49,7 @@ export default function collisionDisplayCardHandler({collision}: CollisionDataPr
     return () => {
       viewer.scene.preRender.removeEventListener(updateHtmlPosition);
     };
-  }, [viewer, collision.coordinates.lat, collision.coordinates.lon]);
+  }, [viewer]);
 
   return (
     <div

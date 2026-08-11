@@ -2,10 +2,11 @@ import React, { createContext, useState } from "react";
 import { FlightPath } from "../../../shared/Types/FlightPath";
 import LeftClickEarth from "./LeftClickEarth";
 import RightClickEarth from "./RightClickEarth";
-import FlightPin from '../FlightPointPin';
-import MovingDot from "../MovingDot";
+import FlightPin from '../FlightDisplayComponents/FlightPointPin';
+import MovingDot from "../FlightDisplayComponents/MovingDot";
 import * as Cesium from 'cesium';
 import { Entity, useCesium } from 'resium';
+import WheelClickEarth from "./WheelClickEarth";
 
 
 interface FlightContextProp {
@@ -31,7 +32,7 @@ export default function EarthClickControl() {
             <FlightsContext.Provider value={{allFlights, setFlights}}>
                 <LeftClickEarth/>
                 <RightClickEarth/>
-                
+                <WheelClickEarth/>
             </FlightsContext.Provider>
 
             {/* loop through all saved flights and draw them */}
@@ -68,5 +69,5 @@ export default function EarthClickControl() {
 function setViewerClockConfig(viewer: any, start: Cesium.JulianDate) : void {
     viewer.clock.startTime = start.clone();
     viewer.clock.currentTime = start.clone();
-    viewer.clock.multiplier = 10;
+    viewer.clock.multiplier = 1;
 }

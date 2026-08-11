@@ -31,8 +31,12 @@ export default function RightClickEarth() {
                 // remove the flight path from UI
                 flightsContextProp.setFlights(prev => prev.filter(flight => flight.aircraft.id !== pickedFlightID));
 
-                // register the flight in the backend
+                // remove the flight in the backend
                 invokeServer('remove_flight', pickedFlightID); 
+
+                // remove collision ascosiated with this flight if there are collisions
+                const removeCollisionEvent = new CustomEvent('remove-collision-card', {detail: pickedFlightID});
+                window.dispatchEvent(removeCollisionEvent);
             } else {
                 // not an entity
                 return;

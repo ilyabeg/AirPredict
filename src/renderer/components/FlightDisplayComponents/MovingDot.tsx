@@ -1,7 +1,6 @@
 import * as Cesium from 'cesium';
-import { useEffect } from 'react';
 import { Entity, useCesium } from 'resium';
-import { positionAtTime, timeToReachDistance } from '../../shared/utils/kinematicsMath.utils';
+import { positionAtTime, timeToReachDistance } from '../../../shared/utils/kinematicsMath.utils';
 import { FlightPath } from 'shared/Types/FlightPath';
 
 interface MovingDotProps {

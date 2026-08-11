@@ -11,8 +11,8 @@ export function handleErrorMessage(
 }
 
 export function handleCollisionAlert(
-  window: BrowserWindow, 
+  browserWindow: BrowserWindow, 
   data: CollisionData
 ): void {
-  emitToClient(window, 'collision_alert', data);
+  emitToClient(browserWindow, 'collision_alert', data);
 }

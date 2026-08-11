@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import * as Cesium from 'cesium';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import { FlightsContext } from './EarthClickControl';
-import FlightPathDisplay from '../FlightPathDisplay';
+import FlightPathDisplay from '../FlightDisplayComponents/FlightPathDisplay';
 import { FlightPath } from 'shared/Types/FlightPath';
 
 export default function WheelClickEarth() {

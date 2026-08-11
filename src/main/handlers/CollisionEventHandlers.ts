@@ -54,7 +54,7 @@ export default function setupCollisionEventHandlers(
             return { success: true };
         });
 
-        if (!res) throw new Error('Error occurred while registering flight.');
+        if (!res) throw new Error('Error occurred while removing flight.');
         return res;
     });
 }

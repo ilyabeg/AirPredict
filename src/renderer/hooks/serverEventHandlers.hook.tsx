@@ -12,9 +12,7 @@ export default function useServerEventHandlers() {
   const errorMessageHandler = useCallback(
     (_event: IpcRendererEvent, err: ErrorMessage) => {
       console.error(`Error from server: ${err.stringMessage}`);
-    },
-    []
-  );
+    },[]);
 
   // callback function for collision alerts and displaying them in the UI
   const collisionAlertHandler = useCallback(
@@ -26,15 +24,13 @@ export default function useServerEventHandlers() {
       // render the collision display
       const alertEvent = new CustomEvent('display-collision-card', { detail: collision });
       window.dispatchEvent(alertEvent);
-    },
-    []
-  );
+  }, []);
 
   useEffect(() => {
     onServerEvent('error_message', errorMessageHandler, false);
     onServerEvent('collision_alert', collisionAlertHandler, false);
 
-      // a promise that these functions will be disposed when the components die (unmount)
+    // a promise that these functions will be disposed when the components unmounts/re-renders
     return () => {
       offServerEvent('error_message', errorMessageHandler);
       offServerEvent('collision_alert', collisionAlertHandler);

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import '../Styles/Header.css';
-import PlaneConfig from './PlaneConfig';
+import PlaneConfig from './FlightDisplayComponents/PlaneConfig';
 import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 
 export default function Header() {

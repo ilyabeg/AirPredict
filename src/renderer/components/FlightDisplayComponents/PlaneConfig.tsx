@@ -2,7 +2,7 @@ import { Card, CardContent, Typography, Box, Divider } from '@mui/material';
 import SpeedIcon from '@mui/icons-material/Speed';
 import AirplaneIcon from '@mui/icons-material/AirplanemodeActive';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import '../Styles/PlaneConfig.css';
+import '../../Styles/PlaneConfig.css';
 
 export default function PlaneConfig() {
     return (

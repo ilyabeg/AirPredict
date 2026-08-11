@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import * as Cesium from 'cesium';
 import invokeServer from '../../IPC/InvokeServer'; 
-import FlightPin from '../FlightPointPin';
+import FlightPin from '../FlightDisplayComponents/FlightPointPin';
 import { FlightPath } from 'shared/Types/FlightPath';
 import { FlightsContext } from './EarthClickControl';
 
@@ -69,7 +69,6 @@ export default function LeftClickEarth() {
 
           // register the flight in the backend
           invokeServer('register_flight', newFlight);
-
           setStartPoint(null); 
         } 
         catch (error) {

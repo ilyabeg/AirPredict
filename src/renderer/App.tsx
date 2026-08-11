@@ -9,8 +9,6 @@ import CollisionControl from './components/CollisionComponents/CollisionControl'
 
 (window as any).CESIUM_BASE_URL = '/cesium/';
 
-//ArcGisMapService.defaultAccessToken = 'AAPTap2eINaU6G_99zFJ8U33jKg..6OAhz7wUcpk8WATWdIuRXUIwah3cEnnfjNkf8Yv-4rlcF2w1p_K6i0GPYh2QOSl2Exa2UmsDL5fjpVdADC40Yr3n7RrRIHM0PqyXXfK4URKTnHPQITzEimdJ_qGeP-rBhB4vqSvqhzsxXYaMaE1MA_PC4L4hkUXccPF4Z6TmkEShsZhO4fwEBSFDDRDw_pOuJDXw7zX_OXgFf-ugMhCn0P_4oExmABpEvdjyj6fiXD-9xx-xvualLE-miICXAT1_A56IJgWo';
-
 export default function App() {
   useServerEventHandlers();
 
