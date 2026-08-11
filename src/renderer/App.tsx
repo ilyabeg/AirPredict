@@ -41,7 +41,7 @@ export default function App() {
 
           <div className="main-content">
             {/* configuring plane only if state is CONFIGURING */}    
-            {/*appState === app_state.CONFIGURING &&*/ <PlaneConfig/>} 
+            {appState === app_state.CONFIGURING && <PlaneConfig/>} 
 
             {/* cesium virtual globe viewer */}
             <Viewer

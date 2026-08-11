@@ -3,11 +3,42 @@ import SpeedIcon from '@mui/icons-material/Speed';
 import AirplaneIcon from '@mui/icons-material/AirplanemodeActive';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import '../../Styles/PlaneConfig.css';
+import { useContext, useState } from 'react';
+import { AppStateContext, app_state } from '../../App';
+
 
 export default function PlaneConfig() {
 
-    const validateInput = () => {
+    const [id, setID] = useState<string | null>(null); 
+    const [velocity, setVelocity] = useState<number | undefined>(undefined);
+    const [accel, setAccel] = useState<number | undefined>(undefined);
 
+    const appStateContext = useContext(AppStateContext);
+
+    const registerFlight = () => {    
+        // if the id is null or a whitespace    
+        if (!id || !id.trim()) {
+            setID(window.crypto.randomUUID()); // <- random generated string id
+        }
+
+        if (!velocity || velocity <= 0) {
+            const velInput = document.getElementById("velocity-input") as HTMLInputElement;
+            velInput.value = '';
+            velInput.focus();
+            return;
+        }
+
+        if (!accel || accel <= 0) {
+            const accelInput = document.getElementById("acceleration-input") as HTMLInputElement;
+            accelInput.value = '';
+            accelInput.focus();
+            return;
+        }
+
+        // save flight details ...
+
+        // set state to clicking to add flight path
+        appStateContext?.setAppState(app_state.CLICKING);
     };
 
     return (
@@ -31,31 +62,37 @@ export default function PlaneConfig() {
             
                             {/* config settings */}
                             <Box className="setting">
-                                <AirplaneIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
+                                <AirplaneIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
                                     Aircraft ID:
                                 </Typography>
-                                <input className="user-input" placeholder='Enter ID (optional)...' />
+                                <input className="user-input" type='text'
+                                    placeholder='Enter ID (optional)...' 
+                                    onBlur={(blurEvent) => setID(blurEvent.target.value)} />
                             </Box>
 
                             <Box className="setting">
-                                <SpeedIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
+                                <SpeedIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
                                     Initial Velocity:
                                 </Typography>
-                                <input className="user-input" placeholder='Enter velocity...' />
+                                <input className="user-input" type='number' id='velocity-input'
+                                    placeholder='Enter velocity...' 
+                                    onBlur={(blurEvent) => setVelocity(blurEvent.target.valueAsNumber)} />
                             </Box>
 
                             <Box className="setting">
-                                <RocketLaunchIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
+                                <RocketLaunchIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
                                     Acceleration:
                                 </Typography>
-                                <input className="user-input" placeholder='Enter acceleration...' />
+                                <input className="user-input" type='number' id='acceleration-input'
+                                    placeholder='Enter acceleration...' 
+                                    onBlur={(blurEvent) => setAccel(blurEvent.target.valueAsNumber)} />
                             </Box>
 
                             <Box>
-                                <button className='done-btn' onClick={validateInput}>Done</button>
+                                <button className='done-btn' onClick={registerFlight}>Done</button>
                             </Box>
 
                         </CardContent>

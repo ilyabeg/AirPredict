@@ -1,6 +1,5 @@
 .app-header {
   display: flex;
-  /* justify-content: space-between; */
   align-items: center;
   background-color: #1a1a1a;
   padding: 0 24px;
@@ -44,7 +43,6 @@ button {
   transition: background-color 0.2s ease, transform 0.1s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
 button:active {
   transform: scale(0.95);
 }

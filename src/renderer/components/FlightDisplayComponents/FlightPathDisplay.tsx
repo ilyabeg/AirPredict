@@ -5,6 +5,8 @@ import CompassIcon from '@mui/icons-material/Explore';
 import LengthIcon from '@mui/icons-material/SyncAlt';
 import TimerIcon from '@mui/icons-material/TimerOutlined';
 import GlobeIcon from '@mui/icons-material/Public';
+import SpeedIcon from '@mui/icons-material/Speed';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { FlightPath } from 'shared/Types/FlightPath';
 import { timeToReachDistance } from 'shared/utils/kinematicsMath.utils';
 import '../../Styles/PathDisplay.css';
@@ -58,7 +60,7 @@ export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
                         </Typography>
                     </Box>
 
-                    {/* distance, heading, time */}
+                    {/* distance & heading */}
                     <Box className="field-style">
                         <LengthIcon sx={{ fontSize: 19, mr: 1, color: '#90caf9' }} />
                         <Typography variant="body2" sx={{ fontWeight: 'lighter' }}>
@@ -71,6 +73,22 @@ export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
                             <strong>Heading:</strong> {flight.heading.toFixed(10).slice(0, -5)}°
                         </Typography>
                     </Box>
+
+                    {/* velocity & acceleration */}
+                    <Box className="field-style">
+                        <SpeedIcon sx={{ fontSize: 20, mr: 1, color: '#90caf9' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'lighter', mr: '8px' }}>
+                            <strong>Initial Velocity:</strong> {flight.aircraft.initial_velocity} m/s
+                        </Typography>
+                    </Box>
+                    <Box className="field-style">
+                        <RocketLaunchIcon sx={{ fontSize: 20, mr: 1, color: '#90caf9' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'lighter', mr: '8px' }}>
+                            <strong>Acceleration:</strong> {flight.aircraft.acceleration} m/s²
+                        </Typography>
+                    </Box>
+
+                    {/* total flight time */}
                     <Box className="field-style">
                         <TimerIcon sx={{ fontSize: 20, mr: 1, color: '#90caf9' }} />
                         <Typography variant="body2" sx={{ fontWeight: 'lighter' }}>
