@@ -39,10 +39,10 @@ export default function EarthClickControl() {
             {allFlights.map((flight) => (
             <>
                 {/* Start Pin */}
-                <FlightPin lat={flight.start_point.lat} lon={flight.start_point.lon} color={Cesium.Color.RED} />
+                <FlightPin id={`${flight.aircraft.id}-START`} lat={flight.start_point.lat} lon={flight.start_point.lon} color={Cesium.Color.RED} />
                 
                 {/* End Pin */}
-                <FlightPin lat={flight.end_point.lat} lon={flight.end_point.lon} color={Cesium.Color.RED} />
+                <FlightPin id={`${flight.aircraft.id}-END`} lat={flight.end_point.lat} lon={flight.end_point.lon} color={Cesium.Color.RED} />
                 
                 {/* the connecting line */}
                 <Entity

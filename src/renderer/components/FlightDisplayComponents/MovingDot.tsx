@@ -59,6 +59,8 @@ export default function MovingDot({flight, flightStartTime}: MovingDotProps) {
     return (
         <>
             <Entity
+                id={`${flight.aircraft.id}-MOV-DOT`}
+
                 //availability = when the entity is visible
                 availability={ 
                     new Cesium.TimeIntervalCollection([
