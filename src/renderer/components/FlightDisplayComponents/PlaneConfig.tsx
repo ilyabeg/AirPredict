@@ -4,7 +4,7 @@ import AirplaneIcon from '@mui/icons-material/AirplanemodeActive';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import '../../Styles/PlaneConfig.css';
 import { useContext, useState } from 'react';
-import { AppStateContext, app_state } from '../../App';
+import { AppStateContext, ConfigFlightContext, app_state } from '../../App';
 
 
 export default function PlaneConfig() {
@@ -14,12 +14,21 @@ export default function PlaneConfig() {
     const [accel, setAccel] = useState<number | undefined>(undefined);
 
     const appStateContext = useContext(AppStateContext);
+    const configFlightContext = useContext(ConfigFlightContext);    
 
     const registerFlight = () => {    
+        if (!appStateContext || !configFlightContext) return;
+
+        // local variable to fix stale id bug
+        let aircraftID;
+
         // if the id is null or a whitespace    
         if (!id || !id.trim()) {
-            setID(window.crypto.randomUUID()); // <- random generated string id
+            aircraftID = window.crypto.randomUUID(); // <- random generated string id
+        } else {
+            aircraftID = id;
         }
+        if (aircraftID !== id) setID(aircraftID);
 
         if (!velocity || velocity <= 0) {
             const velInput = document.getElementById("velocity-input") as HTMLInputElement;
@@ -28,17 +37,22 @@ export default function PlaneConfig() {
             return;
         }
 
-        if (!accel || accel <= 0) {
+        if (accel === undefined || accel < 0) {
             const accelInput = document.getElementById("acceleration-input") as HTMLInputElement;
             accelInput.value = '';
             accelInput.focus();
             return;
         }
 
-        // save flight details ...
+        // save temp config flight details ...
+        configFlightContext.setConfigFlight({
+            aircraftID: aircraftID,
+            velocity: velocity,
+            acceleration: accel
+        });
 
         // set state to clicking to add flight path
-        appStateContext?.setAppState(app_state.CLICKING);
+        appStateContext.setAppState(app_state.CLICKING);
     };
 
     return (

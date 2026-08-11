@@ -20,10 +20,23 @@ export interface StateContextProp {
   appState: app_state,
   setAppState: React.Dispatch<React.SetStateAction<app_state>>
 }
-
 // create appState context for child elements to updtate the app state.
 // for example: when adding a flight, the state should be CONFIGURING and block everything else
 export const AppStateContext = createContext<StateContextProp | null>(null);
+
+
+export type TemporaryFlightConfigs = {
+  aircraftID: string,
+  velocity: number,
+  acceleration: number
+}
+export interface ConfigFlightProp {
+  configFlight: TemporaryFlightConfigs, 
+  setConfigFlight: React.Dispatch<React.SetStateAction<TemporaryFlightConfigs>>
+}
+// temporary flight configuration fields to provide for the left click earth handler from the configuration menu
+export const ConfigFlightContext = createContext<ConfigFlightProp | null>(null);
+
 
 export default function App() {
   useServerEventHandlers();
@@ -31,40 +44,48 @@ export default function App() {
   // save app state for configuring a flight and adding it to memory
   const [appState, setAppState] = useState<app_state>(app_state.DEFAULT);
 
+  // later on, save temporary flight configuration settings in this onject
+  // and provide it to the earth click handler to add the complete flight
+  const [configFlight, setConfigFlight] = useState<TemporaryFlightConfigs>({aircraftID:"", velocity:0, acceleration:-1});
+
   return (
     <>
       {/* pass the context to children */}
       <AppStateContext.Provider value={{appState, setAppState}}>
-        <div className="body-container">      
-          {/* app header component */}
-          <Header />
+        <ConfigFlightContext.Provider value={{configFlight, setConfigFlight}}>
 
-          <div className="main-content">
-            {/* configuring plane only if state is CONFIGURING */}    
-            {appState === app_state.CONFIGURING && <PlaneConfig/>} 
+          <div className="body-container">      
+            {/* app header component */}
+            <Header />
 
-            {/* cesium virtual globe viewer */}
-            <Viewer
-              full 
-              geocoder={false} 
-              baseLayer={false}
-              timeline={true}
-              sceneModePicker={false}
-              infoBox={false} // disables the gray popup box in the top right
-              selectionIndicator={false}
-              shouldAnimate={true}
-              >                  
+            <div className="main-content">
+              {/* configuring plane only if state is CONFIGURING */}    
+              {appState === app_state.CONFIGURING && <PlaneConfig/>} 
 
-              {/* clicking earth logic */}
-              <EarthClickControl />
+              {/* cesium virtual globe viewer */}
+              <Viewer
+                full 
+                geocoder={false} 
+                baseLayer={false}
+                timeline={true}
+                sceneModePicker={false}
+                infoBox={false} // disables the gray popup box in the top right
+                selectionIndicator={false}
+                shouldAnimate={true}
+                >                  
 
-              {/* collision displayer */}
-              <CollisionControl />
+                {/* clicking earth logic */}
+                <EarthClickControl />
 
-              {/* Your 3D airplane path components will eventually go here */}
-            </Viewer>
+                {/* collision displayer */}
+                <CollisionControl />
+
+                {/* Your 3D airplane path components will eventually go here */}
+              </Viewer>
+            </div>
           </div>
-        </div>
+
+        </ConfigFlightContext.Provider>
       </AppStateContext.Provider>    
     </>
   );

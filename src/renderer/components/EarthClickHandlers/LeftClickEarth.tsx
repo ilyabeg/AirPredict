@@ -4,7 +4,8 @@ import * as Cesium from 'cesium';
 import invokeServer from '../../IPC/InvokeServer'; 
 import FlightPin from '../FlightDisplayComponents/FlightPointPin';
 import { FlightPath } from 'shared/Types/FlightPath';
-import { FlightsContext } from './EarthClickControl';
+import { FlightsContext, FlightContextProp } from './EarthClickControl';
+import { AppStateContext, ConfigFlightContext, ConfigFlightProp, app_state } from '../../App';
 
 
 const RAD_TO_DEG = 180 / Math.PI;
@@ -12,18 +13,21 @@ const RAD_TO_DEG = 180 / Math.PI;
 export default function LeftClickEarth() {
   
   const { viewer } = useCesium(); // <- the actual 3D globe
-  const [startPoint, setStartPoint] = useState<{ lat: number, lon: number } | null>(null);
   const flightsContextProp = useContext(FlightsContext);
-  if (!flightsContextProp || !viewer) return;
+  const appStateContext = useContext(AppStateContext);         // app state
+  const configFlightContext = useContext(ConfigFlightContext); // temp flight configurations
 
+  if (!flightsContextProp || !viewer || !configFlightContext || appStateContext?.appState !== app_state.CLICKING) 
+    return;
+
+  const [startPoint, setStartPoint] = useState<{ lat: number, lon: number } | null>(null);
+
+  // screen space event handler for left clicking earth
   const handleClick = async (movement: any) => {
     if (!movement.position) return; // movement.position is the pixel position of the click
 
     // coverting the pixel position to a cartesian 3D vector on the globe
-    const earthClick = viewer.camera.pickEllipsoid(
-      movement.position,
-      viewer.scene.globe.ellipsoid // <- earth ellipsoid model
-    );
+    const earthClick = viewer.camera.pickEllipsoid(movement.position, viewer.scene.globe.ellipsoid); // <- earth ellipsoid model
 
     if (earthClick) {
       // raycasting calculations:
@@ -33,9 +37,6 @@ export default function LeftClickEarth() {
       const cartographic = Cesium.Cartographic.fromCartesian(earthClick);
       const lon = cartographic.longitude * RAD_TO_DEG;
       const lat = cartographic.latitude * RAD_TO_DEG;
-
-      // display click for debugging
-      console.log(`Clicked Lat: ${lat}, Lon: ${lon}`);
 
       if (!startPoint) {
         console.log('Start point saved! Click again for the end point.');
@@ -50,35 +51,24 @@ export default function LeftClickEarth() {
             start_point: startPoint,
             end_point: endPoint
           });
-          console.log(`Calculated distance: ${result.distance / 1000}km`);
 
-          // add the new flight
-          const newFlight: FlightPath = {
-            aircraft: {
-              id: window.crypto.randomUUID(),
-              initial_velocity: 25, // temp for debug
-              acceleration: 10,
-              heading: result.heading        
-            }, 
-            start_point: startPoint,
-            end_point: endPoint,
-            distance: result.distance,
-            heading: result.heading          
-          };
-          flightsContextProp.setFlights(prevFlights => [...prevFlights, newFlight]); 
-
-          // register the flight in the backend
-          invokeServer('register_flight', newFlight);
-          setStartPoint(null); 
+          // add the new flight and reset
+          addFlight(result, startPoint, endPoint, flightsContextProp, configFlightContext);
+          resetStartAndState();        
         } 
         catch (error) {
-          // display the error in the console and reset the start point
+          // display the error in the console and reset 
           console.error('IPC bridge failed:', error);
-          setStartPoint(null); 
+          resetStartAndState();
         }
       }
     }
   };
+
+  const resetStartAndState = () => {
+    setStartPoint(null); 
+    appStateContext.setAppState(app_state.DEFAULT);
+  }
 
   return (
     <>
@@ -90,4 +80,45 @@ export default function LeftClickEarth() {
       {startPoint && (<FlightPin lat={startPoint.lat} lon={startPoint.lon} />)}
     </>
   );
+}
+
+
+// helpers
+
+function addFlight(
+  result: {distance: number, heading: number},
+  startPoint: {lat: number, lon: number}, 
+  endPoint: {lat: number, lon: number},
+  flightsContextProp: FlightContextProp,
+  configContext: ConfigFlightProp
+) {
+
+  // the temporary flight configurations from the config menu
+  const aircraftID = configContext.configFlight.aircraftID;
+  const velocity = configContext.configFlight.velocity;
+  const acceleration = configContext.configFlight.acceleration;
+
+  const newFlight: FlightPath = {
+      aircraft: {
+        id: aircraftID,
+        initial_velocity: velocity,
+        acceleration: acceleration,
+        heading: result.heading        
+      }, 
+      start_point: startPoint,
+      end_point: endPoint,
+      distance: result.distance,
+      heading: result.heading          
+    };
+  flightsContextProp.setFlights(prevFlights => [...prevFlights, newFlight]); 
+
+  // reset configurations
+  configContext.setConfigFlight({
+    aircraftID: "",
+    velocity: 0,
+    acceleration: -1
+  });
+
+  // register the flight in the backend
+  invokeServer('register_flight', newFlight);
 }
