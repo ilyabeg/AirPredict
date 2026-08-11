@@ -40,6 +40,9 @@ export default function App() {
           <Header />
 
           <div className="main-content">
+            {/* configuring plane only if state is CONFIGURING */}    
+            {/*appState === app_state.CONFIGURING &&*/ <PlaneConfig/>} 
+
             {/* cesium virtual globe viewer */}
             <Viewer
               full 
@@ -48,11 +51,9 @@ export default function App() {
               timeline={true}
               sceneModePicker={false}
               infoBox={false} // disables the gray popup box in the top right
+              selectionIndicator={false}
               shouldAnimate={true}
-              >  
-
-              {/* configuring plane only if state is CONFIGURING */}    
-              <PlaneConfig/>    
+              >                  
 
               {/* clicking earth logic */}
               <EarthClickControl />

@@ -14,6 +14,15 @@ interface FlightPathDisplayProps {
 }
 
 export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
+
+    const calculateFlightTime = (flight: FlightPath) => {
+        const seconds = timeToReachDistance(
+            flight.distance, flight.aircraft.initial_velocity,
+            flight.aircraft.acceleration
+        );
+        return Math.round(seconds! / 60);
+    }
+
     return (
         <>
             {/* 'sx' allows to use css directly inside this component */}
@@ -74,12 +83,4 @@ export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
             </Box>
         </>
     );
-}
-
-function calculateFlightTime(flight: FlightPath) : number {
-    const seconds = timeToReachDistance(
-        flight.distance, flight.aircraft.initial_velocity,
-        flight.aircraft.acceleration
-    );
-    return Math.round(seconds! / 60);
 }

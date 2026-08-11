@@ -10,8 +10,11 @@ export default function Header() {
 
     // start configuring the plane object
     const handleClick = () => {
-        if (appStateContext?.appState !== app_state.CONFIGURING)
-            appStateContext?.setAppState(app_state.CONFIGURING);
+        if (appStateContext && appStateContext.appState !== app_state.CONFIGURING){
+            console.log(`app context was ${appStateContext.appState}`);
+            appStateContext.setAppState(app_state.CONFIGURING);
+            console.log(`now app context is ${appStateContext.appState}`);
+        }
     };
 
     // personal note: no need to use useCallback or useMemo hooks here to stop the component
