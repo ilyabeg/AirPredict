@@ -3,8 +3,10 @@ import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
 import CompassIcon from '@mui/icons-material/Explore';
 import LengthIcon from '@mui/icons-material/SyncAlt';
+import TimerIcon from '@mui/icons-material/TimerOutlined';
 import GlobeIcon from '@mui/icons-material/Public';
 import { FlightPath } from 'shared/Types/FlightPath';
+import { timeToReachDistance } from 'shared/utils/kinematicsMath.utils';
 import '../../Styles/PathDisplay.css';
 
 interface FlightPathDisplayProps {
@@ -47,7 +49,7 @@ export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
                         </Typography>
                     </Box>
 
-                    {/* distance & heading */}
+                    {/* distance, heading, time */}
                     <Box className="field-style">
                         <LengthIcon sx={{ fontSize: 19, mr: 1, color: '#90caf9' }} />
                         <Typography variant="body2" sx={{ fontWeight: 'lighter' }}>
@@ -60,10 +62,24 @@ export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
                             <strong>Heading:</strong> {flight.heading.toFixed(10).slice(0, -5)}°
                         </Typography>
                     </Box>
+                    <Box className="field-style">
+                        <TimerIcon sx={{ fontSize: 20, mr: 1, color: '#90caf9' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'lighter' }}>
+                            <strong>Flight time:</strong> ~{calculateFlightTime(flight)} minutes
+                        </Typography>
+                    </Box>
         
                 </CardContent>
               </Card>
             </Box>
         </>
     );
+}
+
+function calculateFlightTime(flight: FlightPath) : number {
+    const seconds = timeToReachDistance(
+        flight.distance, flight.aircraft.initial_velocity,
+        flight.aircraft.acceleration
+    );
+    return Math.round(seconds! / 60);
 }

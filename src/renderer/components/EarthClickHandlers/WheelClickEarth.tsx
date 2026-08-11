@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import * as Cesium from 'cesium';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import { FlightsContext } from './EarthClickControl';
@@ -14,6 +14,10 @@ export default function WheelClickEarth() {
     // the state of the picked flight (first click = show, another click = hide)
     const [pickedFlight, setPickedFlight] = useState<FlightPath | undefined>(undefined);
     const flightRef = useRef(pickedFlight);
+
+    useEffect(() => {
+        flightRef.current = pickedFlight;
+    }, [pickedFlight]);
 
     const handleClick = (movement: any) => {
         if (!movement.position) return;
@@ -52,7 +56,7 @@ export default function WheelClickEarth() {
 
             <div
                 style={{
-                top: '20px', left: '30px',
+                top: '20px', left: '25px',
                 position: 'absolute',
                 zIndex: 9999,
                 }}
