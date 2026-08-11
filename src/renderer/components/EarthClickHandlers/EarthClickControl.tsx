@@ -9,7 +9,7 @@ import { Entity, useCesium } from 'resium';
 import WheelClickEarth from "./WheelClickEarth";
 
 
-interface FlightContextProp {
+export interface FlightContextProp {
     allFlights: FlightPath[],
     setFlights: React.Dispatch<React.SetStateAction<FlightPath[]>>
 }
@@ -46,7 +46,7 @@ export default function EarthClickControl() {
                 
                 {/* the connecting line */}
                 <Entity
-                    id={flight.aircraft.id} // give the line an id to remove
+                    id={`${flight.aircraft.id}`} // give the line an id to remove
                     polyline={{
                         positions: Cesium.Cartesian3.fromDegreesArray([
                         flight.start_point.lon, flight.start_point.lat,

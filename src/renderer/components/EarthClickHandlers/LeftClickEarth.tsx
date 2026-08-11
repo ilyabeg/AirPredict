@@ -65,7 +65,7 @@ export default function LeftClickEarth() {
             distance: result.distance,
             heading: result.heading          
           };
-          flightsContextProp.setFlights((prevFlights) => [...prevFlights, newFlight]); // like writing in C#: savedFlights += newFlight
+          flightsContextProp.setFlights(prevFlights => [...prevFlights, newFlight]); 
 
           // register the flight in the backend
           invokeServer('register_flight', newFlight);

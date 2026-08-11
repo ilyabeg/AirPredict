@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 import * as Cesium from 'cesium';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import { FlightsContext } from './EarthClickControl';
@@ -13,6 +13,7 @@ export default function WheelClickEarth() {
 
     // the state of the picked flight (first click = show, another click = hide)
     const [pickedFlight, setPickedFlight] = useState<FlightPath | undefined>(undefined);
+    const flightRef = useRef(pickedFlight);
 
     const handleClick = (movement: any) => {
         if (!movement.position) return;
@@ -21,14 +22,17 @@ export default function WheelClickEarth() {
         const pickedFeature = viewer.scene.pick(movement.position);
         if (!Cesium.defined(pickedFeature)) 
             return; // nothing picked
-
-        // console.log(`picked feature: ${pickedFeature}`); // debug
         
-        if (!pickedFlight) {
+        if (flightRef.current === undefined) {
             // if the picked point is an entity (meaning flight path)
             if (pickedFeature.id) // <- pickedFeature.id instanceof Cesium.Entity
             {
                 const pickedFlightID = pickedFeature.id.id; // id of the entity itself
+
+                // if not a flight path (such as pin points)
+                if (!flightsContextProp.allFlights.find(flight => flight.aircraft.id === pickedFlightID)) return;
+                console.log(`showing flight: ${pickedFlightID}`);
+
                 setPickedFlight(
                     flightsContextProp.allFlights.find(flight => flight.aircraft.id === pickedFlightID)
                 );
@@ -36,6 +40,7 @@ export default function WheelClickEarth() {
         }
         else {
             setPickedFlight(undefined);
+            console.log(`hiding flight: ${flightRef.current.aircraft.id}`);
         }
     }
 
@@ -45,8 +50,17 @@ export default function WheelClickEarth() {
                 <ScreenSpaceEvent action={handleClick} type={Cesium.ScreenSpaceEventType.MIDDLE_DOWN} />
             </ScreenSpaceEventHandler>
 
-            {/* trigger flight path display card visibility when the user actualy picks a flight */}
-            {pickedFlight && <FlightPathDisplay flight={pickedFlight} />}
+            <div
+                style={{
+                position: 'absolute',
+                transform: 'translate(-50%, -100%)', // shift the window to centralize the anchor point to the bottm 
+                pointerEvents: 'none', // make clickable throught the window
+                zIndex: 9999,
+                }}
+            >
+                {/* trigger flight path display card visibility when the user actualy picks a flight */}
+                {pickedFlight && <FlightPathDisplay flight={pickedFlight} />}
+            </div>
         </>
     );
 }

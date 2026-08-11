@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import * as Cesium from 'cesium';
 import invokeServer from '../../IPC/InvokeServer'; 
-import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium, Entity, pick } from 'resium';
+import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import { FlightsContext } from './EarthClickControl';
 import {FlightPath} from '../../../shared/Types/FlightPath';
 
@@ -26,10 +26,14 @@ export default function RightClickEarth() {
             // if the picked point is an entity (meaning flight path), remove it
             if (pickedFeature.id) // <- pickedFeature.id instanceof Cesium.Entity
             {
+                // if picked entity isn't a polyline
                 const pickedFlightID = pickedFeature.id.id; // id of the entity itself
-                removeFlight(pickedFlightID, viewer, flightsContextProp.setFlights);
 
-                // remove the flight in the backend
+                // if not a flight path (such as pin points)
+                if (!flightsContextProp.allFlights.find(flight => flight.aircraft.id === pickedFlightID)) return;
+
+                // remove the flight from UI and backend
+                removeFlight(pickedFlightID, viewer, flightsContextProp.setFlights);                
                 invokeServer('remove_flight', pickedFlightID);               
             } else {
                 // not an entity
@@ -52,7 +56,7 @@ export default function RightClickEarth() {
 
 function removeFlight(
     flightID: string,
-    viewer: any,
+    viewer: Cesium.Viewer,
     setFlights: React.Dispatch<React.SetStateAction<FlightPath[]>>
 ) {
     // debug check
@@ -60,9 +64,9 @@ function removeFlight(
 
     // remove the flight path from UI
     setFlights(prev => prev.filter(flight => flight.aircraft.id !== flightID));
-    viewer.entities.removeById(flightID); // מחקיה ישירה ליתר ביטחון
-    viewer.entities.removeById(`${flightID}-START`); // remove start pin entity
-    viewer.entities.removeById(`${flightID}-END`);   // remove end pin entity
+    viewer.entities.removeById(`${flightID}`);         // מחקיה ישירה ליתר ביטחון
+    viewer.entities.removeById(`${flightID}-START`);   // remove start pin entity
+    viewer.entities.removeById(`${flightID}-END`);     // remove end pin entity
     viewer.entities.removeById(`${flightID}-MOV-DOT`); // remove moving dot entity of this flight path
 
     // remove collision ascosiated with this flight if there are collisions

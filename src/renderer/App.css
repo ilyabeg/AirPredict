@@ -17,5 +17,7 @@ html, body, #root {
 
 .main-content {
   flex: 1;
-  position: relative;
+  
+  /* makes child elements (with absolute position) be positioned relatively to this main content container */
+  position: relative; 
 }
