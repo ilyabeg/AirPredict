@@ -1,8 +1,11 @@
 import { Card, CardContent, Typography, Box, Divider } from '@mui/material';
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
+import CompassIcon from '@mui/icons-material/Explore';
+import LengthIcon from '@mui/icons-material/SyncAlt';
 import GlobeIcon from '@mui/icons-material/Public';
 import { FlightPath } from 'shared/Types/FlightPath';
+import '../../Styles/PathDisplay.css';
 
 interface FlightPathDisplayProps {
     flight: FlightPath
@@ -20,9 +23,9 @@ export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
                   
                     {/* flight id */}
                     <Box className="title">
-                        <GlobeIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
+                        <GlobeIcon sx={{ fontSize: 19, mr: 1, color: '#ffffff' }} />
                         <Typography variant="body2">
-                        <strong>AirCraft ID:</strong> {flight.aircraft.id.substring(0, 8)}
+                            <strong>AirCraft ID:</strong> {flight.aircraft.id.substring(0, 8)}
                         </Typography>
                     </Box>
 
@@ -30,29 +33,31 @@ export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
     
                     {/* start point coordinates */}
                     <Box className="field-style">
-                        <FlightTakeoffIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
-                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                        <FlightTakeoffIcon sx={{ fontSize: 19, mr: 1, color: '#90caf9' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'lighter' }}>
                             {/* toFixed() instead of Math.round() to keep percise number */}
-                            Start Point: {flight.start_point.lat.toFixed(10).slice(0, -5)}°, {flight.start_point.lon.toFixed(10).slice(0, -5)}°
+                            <strong>Start Point:</strong> {flight.start_point.lat.toFixed(10).slice(0, -5)}°, {flight.start_point.lon.toFixed(10).slice(0, -5)}°
                         </Typography>
                     </Box>
                     {/* end point coordinates */}
                     <Box className="field-style">
-                        <FlightLandIcon sx={{ fontSize: 18, mr: 1, color: '#d8d8d8' }} />
-                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            End Point: {flight.end_point.lat.toFixed(10).slice(0, -5)}°, {flight.end_point.lon.toFixed(10).slice(0, -5)}°
+                        <FlightLandIcon sx={{ fontSize: 19, mr: 1, color: '#90caf9' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'lighter' }}>
+                            <strong>End Point:</strong> {flight.end_point.lat.toFixed(10).slice(0, -5)}°, {flight.end_point.lon.toFixed(10).slice(0, -5)}°
                         </Typography>
                     </Box>
 
                     {/* distance & heading */}
                     <Box className="field-style">
-                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            Distance: {flight.distance.toFixed(10).slice(0, -5)}KM
+                        <LengthIcon sx={{ fontSize: 19, mr: 1, color: '#90caf9' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'lighter' }}>
+                            <strong>Distance:</strong> {(flight.distance / 1000).toFixed(10).slice(0, -5)} km
                         </Typography>
                     </Box>
                     <Box className="field-style">
-                        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                            Heading: {flight.heading}°
+                        <CompassIcon sx={{ fontSize: 19, mr: 1, color: '#90caf9' }} />
+                        <Typography variant="body2" sx={{ fontWeight: 'lighter' }}>
+                            <strong>Heading:</strong> {flight.heading.toFixed(10).slice(0, -5)}°
                         </Typography>
                     </Box>
         

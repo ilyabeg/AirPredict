@@ -52,9 +52,8 @@ export default function WheelClickEarth() {
 
             <div
                 style={{
+                top: '20px', left: '30px',
                 position: 'absolute',
-                transform: 'translate(-50%, -100%)', // shift the window to centralize the anchor point to the bottm 
-                pointerEvents: 'none', // make clickable throught the window
                 zIndex: 9999,
                 }}
             >
