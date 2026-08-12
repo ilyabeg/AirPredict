@@ -37,11 +37,11 @@ export default function setupCollisionEventHandlers(
                 if (headOnCollision)
                     ClientEventHandlers.handleCollisionAlert(browserWindow, headOnCollision);
                 }
-          });
-          return { success: true };
+            });
+            return { success: true };
         });
         
-        if (!res) throw new Error('Error occurred while registering flight.');
+        if (!res) throw new Error('Error occurred while registering flight collision.');
         return res;
     });
 
@@ -104,7 +104,7 @@ function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : Collis
         const timeB = KinematicMath.timeToReachDistance(distB, flightB.aircraft.initial_velocity, flightB.aircraft.acceleration);
     
         // they never reach it
-        if (timeA === null || timeB === null) continue;
+        if (!timeA || !timeB) continue;
 
         // if both planes reached this point at the same time, they collided
         if (Math.abs(timeA - timeB) <= timeDiff) {
@@ -127,7 +127,7 @@ function potentialCollision(flightA: FlightPath, flightB: FlightPath) : boolean 
     const startToStart = Geodesic.WGS84.Inverse(
         flightA.start_point.lat, flightA.start_point.lon,
         flightB.start_point.lat, flightB.start_point.lon
-    ).s12! / 1000;
+    ).s12! / 1000;//km
 
     // the distance between them is greater than their potential total distance, which means they never collide
     if (startToStart > flightA.distance + flightB.distance) return false;
@@ -135,7 +135,7 @@ function potentialCollision(flightA: FlightPath, flightB: FlightPath) : boolean 
     // if they can potentialy reach each other, check their heading
     const headingDiff = Math.abs(flightA.heading - flightB.heading);
 
-    console.log(`startToStart ${startToStart}, headingDiff ${headingDiff}`) //debug
+    console.log(`startToStart ${startToStart} km, headingDiff ${headingDiff}`) //debug
 
     // if the paths are basically parallel and they are at least 50km from each other
     if (headingDiff <= 2.0 && startToStart >= pathDistanceLimit) return false;
@@ -161,7 +161,7 @@ function findIntersection(flightA: FlightPath, flightB: FlightPath) : { lat: num
     const crossP = VectorMath.crossProduct(normalVectorA, normalVectorB);
     const length = VectorMath.vectorLength(crossP);
 
-    // almost zero means the two great circles are coincident (same plane) —
+    // almost zero means the two great circles are coincident (אותו מישור) —
     // there is no single well-defined intersection point, so vector math doesn't work,
     // we need to calculate using kinematics
     if (length < minVectorLength) return null;

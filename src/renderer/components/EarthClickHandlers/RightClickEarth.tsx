@@ -33,7 +33,7 @@ export default function RightClickEarth() {
                 if (!flightsContextProp.allFlights.find(flight => flight.aircraft.id === pickedFlightID)) return;
 
                 // remove the flight from UI and backend
-                removeFlight(pickedFlightID, viewer, flightsContextProp.setFlights);                
+                removeFlight(pickedFlightID, flightsContextProp.setFlights);                
                 invokeServer('remove_flight', pickedFlightID);               
             } else {
                 // not an entity
@@ -56,7 +56,6 @@ export default function RightClickEarth() {
 
 function removeFlight(
     flightID: string,
-    viewer: Cesium.Viewer,
     setFlights: React.Dispatch<React.SetStateAction<FlightPath[]>>
 ) {
     // debug check
@@ -64,10 +63,6 @@ function removeFlight(
 
     // remove the flight path from UI
     setFlights(prev => prev.filter(flight => flight.aircraft.id !== flightID));
-    viewer.entities.removeById(`${flightID}`);         // מחקיה ישירה ליתר ביטחון
-    viewer.entities.removeById(`${flightID}-START`);   // remove start pin entity
-    viewer.entities.removeById(`${flightID}-END`);     // remove end pin entity
-    viewer.entities.removeById(`${flightID}-MOV-DOT`); // remove moving dot entity of this flight path
 
     // remove collision ascosiated with this flight if there are collisions
     const removeCollisionEvent = new CustomEvent('remove-collision-card', {detail: flightID});

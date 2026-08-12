@@ -37,7 +37,7 @@ export default function EarthClickControl() {
 
             {/* loop through all saved flights and draw them */}
             {allFlights.map((flight) => (
-            <>
+            <React.Fragment key={`${flight.aircraft.id}`}>
                 {/* Start Pin */}
                 <FlightPin id={`${flight.aircraft.id}-START`} lat={flight.start_point.lat} lon={flight.start_point.lon} color={Cesium.Color.RED} />
                 
@@ -60,7 +60,7 @@ export default function EarthClickControl() {
 
                 {/* moving plane dot */}
                 <MovingDot flight={flight} flightStartTime={appFlightsStartTime} />
-            </>
+            </React.Fragment>
             ))}
         </>
     );
