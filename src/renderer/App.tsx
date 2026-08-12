@@ -1,12 +1,13 @@
 import './App.css';
 import useServerEventHandlers from './hooks/serverEventHandlers.hook';
-import Header from './components/Header';
-import { Provider, Viewer } from 'resium';
+import Header from './components/general/Header';
+import { Viewer } from 'resium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import EarthClickControl from './components/EarthClickHandlers/EarthClickControl';
 import CollisionControl from './components/CollisionComponents/CollisionControl';
 import PlaneConfig from './components/FlightDisplayComponents/PlaneConfig';
 import { useState, createContext } from 'react';
+import FadeMessage from './components/general/FadeMessage';
 
 // tell cesium exactly where to find all cesium assets
 (window as any).CESIUM_BASE_URL = '/cesium/';
@@ -61,6 +62,9 @@ export default function App() {
             <div className="main-content">
               {/* configuring plane only if state is CONFIGURING */}    
               {appState === app_state.CONFIGURING && <PlaneConfig/>} 
+
+              {/* show the user instructions after plane config */}
+              {appState === app_state.CLICKING && (<FadeMessage message={"Click twice on the Earth to add the flight path."}/>)}
 
               {/* cesium virtual globe viewer */}
               <Viewer

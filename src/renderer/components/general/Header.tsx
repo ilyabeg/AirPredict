@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import '../Styles/Header.css';
+import '../../Styles/Header.css';
 import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
-import { AppStateContext, app_state } from '../App';
+import { AppStateContext, app_state } from '../../App';
 
 export default function Header() {
 

@@ -1,0 +1,24 @@
+
+#message-container {
+    background-color: rgba(30, 30, 30, 0.8);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    position: absolute;
+    top: 2%;
+    z-index: 99999;
+    margin-left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: lightgray;
+    padding: 10px;
+    border-radius: 10px;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+#message-container.fade {
+    opacity: 0;
+}

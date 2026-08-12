@@ -55,6 +55,11 @@ export default function PlaneConfig() {
         appStateContext.setAppState(app_state.CLICKING);
     };
 
+    const cencelConfig = () => {
+        if (!appStateContext) return;
+        appStateContext.setAppState(app_state.DEFAULT);
+    }
+
     return (
         <>
             <div className='content-wrapper'>
@@ -105,8 +110,11 @@ export default function PlaneConfig() {
                                     onBlur={(blurEvent) => setAccel(blurEvent.target.valueAsNumber)} />
                             </Box>
 
-                            <Box>
-                                <button className='done-btn' onClick={registerFlight}>Done</button>
+                            <Box className="buttons-container">
+                                <div className='buttons-wrapper'>
+                                    <button className='option-btn' onClick={cencelConfig}>Cancel</button>
+                                    <button className='option-btn' onClick={registerFlight}>Done</button>
+                                </div>
                             </Box>
 
                         </CardContent>

@@ -7,7 +7,6 @@ import MovingDot from "../FlightDisplayComponents/MovingDot";
 import * as Cesium from 'cesium';
 import { Entity, useCesium } from 'resium';
 import WheelClickEarth from "./WheelClickEarth";
-import { mas } from "process";
 
 
 export interface FlightContextProp {
