@@ -8,13 +8,13 @@ import { AppStateContext, ConfigFlightContext, app_state } from '../../App';
 
 
 export default function PlaneConfig() {
+    
+    const appStateContext = useContext(AppStateContext);
+    const configFlightContext = useContext(ConfigFlightContext);  
 
     const [id, setID] = useState<string | null>(null); 
     const [velocity, setVelocity] = useState<number | undefined>(undefined);
-    const [accel, setAccel] = useState<number | undefined>(undefined);
-
-    const appStateContext = useContext(AppStateContext);
-    const configFlightContext = useContext(ConfigFlightContext);    
+    const [accel, setAccel] = useState<number | undefined>(undefined);  
 
     const registerFlight = () => {    
         if (!appStateContext || !configFlightContext) return;

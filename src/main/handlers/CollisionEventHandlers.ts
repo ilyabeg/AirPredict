@@ -24,20 +24,22 @@ export default function setupCollisionEventHandlers(
             all_flights.push(newFlight);
 
             // check for collisions
-            all_flights.forEach((existing) => {
-                const normal_collision = checkNormalCollision(newFlight, existing);
+            for (const existingFlight of all_flights) {
+                if (newFlight === existingFlight) continue; // ignore identical flights
+
+                const normal_collision = checkNormalCollision(newFlight, existingFlight);
 
                 // if they collided normally
                 if (normal_collision) {
-                ClientEventHandlers.handleCollisionAlert(browserWindow, normal_collision);
+                    ClientEventHandlers.handleCollisionAlert(browserWindow, normal_collision);
                 } 
                 else {
-                // if they collided head on
-                const headOnCollision = checkHeadOnCollision(newFlight, existing);
-                if (headOnCollision)
-                    ClientEventHandlers.handleCollisionAlert(browserWindow, headOnCollision);
+                    // if they collided head on
+                    const headOnCollision = checkHeadOnCollision(newFlight, existingFlight);
+                    if (headOnCollision)
+                        ClientEventHandlers.handleCollisionAlert(browserWindow, headOnCollision);
                 }
-            });
+            }
             return { success: true };
         });
         
@@ -69,6 +71,8 @@ const timeDiff = 3;//seconds
 function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : CollisionData | null {
 
     if (!potentialCollision(flightA, flightB)) return null;
+
+    console.log(`potential collision between flight ${flightA.aircraft.id} and flight ${flightB.aircraft.id} has been identified.`);
 
     // get the flights intersection point
     const flight_intersection = findIntersection(flightA, flightB);
@@ -130,12 +134,13 @@ function potentialCollision(flightA: FlightPath, flightB: FlightPath) : boolean 
     ).s12! / 1000;//km
 
     // the distance between them is greater than their potential total distance, which means they never collide
-    if (startToStart > flightA.distance + flightB.distance) return false;
+    const totalDistanceKM = (flightA.distance + flightB.distance) / 1000;
+    if (startToStart > totalDistanceKM) return false;
 
     // if they can potentialy reach each other, check their heading
     const headingDiff = Math.abs(flightA.heading - flightB.heading);
 
-    console.log(`startToStart ${startToStart} km, headingDiff ${headingDiff}`) //debug
+    // console.log(`startToStart ${startToStart} km, headingDiff ${headingDiff}`) //debug
 
     // if the paths are basically parallel and they are at least 50km from each other
     if (headingDiff <= 2.0 && startToStart >= pathDistanceLimit) return false;
