@@ -56,7 +56,7 @@ export default function WheelClickEarth() {
 
             <div
                 style={{
-                top: '20px', left: '25px',
+                top: '0px', left: '35px',
                 position: 'absolute',
                 zIndex: 9999,
                 }}

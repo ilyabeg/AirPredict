@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useRef, useEffect } from "react";
 import { FlightPath } from "../../../shared/Types/FlightPath";
 import LeftClickEarth from "./LeftClickEarth";
 import RightClickEarth from "./RightClickEarth";
@@ -7,6 +7,7 @@ import MovingDot from "../FlightDisplayComponents/MovingDot";
 import * as Cesium from 'cesium';
 import { Entity, useCesium } from 'resium';
 import WheelClickEarth from "./WheelClickEarth";
+import { mas } from "process";
 
 
 export interface FlightContextProp {
@@ -23,9 +24,14 @@ export default function EarthClickControl() {
     const cesiumContext = useCesium(); // <- all cesium main components such as viewer, scene ...
     if (!cesiumContext.viewer) return;
     
-    // config a master start time for all the application flights
-    const appFlightsStartTime = Cesium.JulianDate.fromDate(new Date());
-    setViewerClockConfig(cesiumContext.viewer, appFlightsStartTime);
+    // create a master start time for all the application flights to start at the exact monent
+    const masterStartRef = useRef<Cesium.JulianDate>();
+
+    // connect the start time to the components mount time and only at this point in time
+    useEffect(() => {
+        masterStartRef.current = Cesium.JulianDate.fromDate(new Date());
+        setViewerClockConfig(cesiumContext.viewer, masterStartRef.current);
+    }, []);
 
     return(
         <>
@@ -59,7 +65,7 @@ export default function EarthClickControl() {
                 />
 
                 {/* moving plane dot */}
-                <MovingDot flight={flight} flightStartTime={appFlightsStartTime} />
+                <MovingDot flight={flight} flightStartTime={masterStartRef.current!} />
             </React.Fragment>
             ))}
         </>
@@ -68,6 +74,5 @@ export default function EarthClickControl() {
 
 function setViewerClockConfig(viewer: any, start: Cesium.JulianDate) : void {
     viewer.clock.startTime = start.clone();
-    viewer.clock.currentTime = start.clone();
     viewer.clock.multiplier = 1;
 }

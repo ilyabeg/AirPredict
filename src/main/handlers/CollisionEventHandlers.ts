@@ -64,7 +64,7 @@ export default function setupCollisionEventHandlers(
 // ***************** collision calculations **********
 
 // allowed time difference for collision check
-const timeDiff = 5;//seconds
+const timeDiff = 3;//seconds
 
 function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : CollisionData | null {
 
