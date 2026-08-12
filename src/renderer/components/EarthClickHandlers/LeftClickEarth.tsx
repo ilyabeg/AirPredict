@@ -6,6 +6,7 @@ import FlightPin from '../FlightDisplayComponents/FlightPointPin';
 import { FlightPath } from 'shared/Types/FlightPath';
 import { FlightsContext, FlightContextProp } from './EarthClickControl';
 import { AppStateContext, ConfigFlightContext, ConfigFlightProp, app_state } from '../../App';
+import FadeMessage from '../general/FadeMessage';
 
 
 const RAD_TO_DEG = 180 / Math.PI;
@@ -19,6 +20,17 @@ export default function LeftClickEarth() {
 
   if (!flightsContextProp || !viewer || !configFlightContext || appStateContext?.appState !== app_state.CLICKING) 
     return;
+
+  // check if the temporary flight configs exist already
+  const newFlightId = configFlightContext.configFlight.aircraftID;
+  
+  if (flightsContextProp.allFlights.find(flight => flight.aircraft.id === newFlightId)) {
+    alert("Flight identificator must be unique.");
+    appStateContext.setAppState(app_state.DEFAULT);
+    return; /*(
+      <FadeMessage message={"Flight identificator must be unique."}/>
+    );*/
+  }
 
   const [startPoint, setStartPoint] = useState<{ lat: number, lon: number } | null>(null);
 
