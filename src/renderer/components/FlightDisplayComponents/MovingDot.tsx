@@ -24,7 +24,7 @@ export default function MovingDot({flight, flightStartTime}: MovingDotProps) {
 
     // start and end dates and time
     const flightEndTime = Cesium.JulianDate.addSeconds(flightStartTime, totalFlightTime, new Cesium.JulianDate());
-    console.log(`flight start time: ${flightStartTime}; end time: ${flightEndTime}`); // debug check
+    // console.log(`flight start time: ${flightStartTime}; end time: ${flightEndTime}`); // debug check
     
     // sample flight 3d positions over time
     const computeFlight = () => {

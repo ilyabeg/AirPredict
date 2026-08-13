@@ -19,36 +19,19 @@ export default function PlaneConfig() {
     const registerFlight = () => {    
         if (!appStateContext || !configFlightContext) return;
 
-        // local variable to fix stale id bug
-        let aircraftID;
-
-        // if the id is null or a whitespace    
-        if (!id || !id.trim()) {
-            aircraftID = window.crypto.randomUUID(); // <- random generated string id
-        } else {
-            aircraftID = id;
-        }
-        if (aircraftID !== id) setID(aircraftID);
-
-        if (!velocity || velocity <= 0) {
+        // no velocity provided
+        if (!velocity) {
             const velInput = document.getElementById("velocity-input") as HTMLInputElement;
             velInput.value = '';
             velInput.focus();
             return;
         }
 
-        if (accel === undefined || accel < 0) {
-            const accelInput = document.getElementById("acceleration-input") as HTMLInputElement;
-            accelInput.value = '';
-            accelInput.focus();
-            return;
-        }
-
         // save temp config flight details ...
         configFlightContext.setConfigFlight({
-            aircraftID: aircraftID,
+            aircraftID: (!id) ? window.crypto.randomUUID() : id, // set random id if no id provided
             velocity: velocity,
-            acceleration: accel
+            acceleration: (!accel) ? 0 : accel // set default acceleration if no accel provided
         });
 
         // set state to clicking to add flight path
@@ -68,7 +51,7 @@ export default function PlaneConfig() {
                     <Card className="container" >
                         
                         {/* pb: '16px' is an MUI shortcut that fixes a weird default padding issue on CardContent */}
-                        <CardContent sx={{ pb: '16px !important' }}> {/* important! tells MUI to override it's deafult settings */}
+                        <CardContent sx={{ pb: '16px !important', minWidth: 'auto' }}> {/* important! tells MUI to override it's deafult settings */}
                         
                             {/* flight id */}
                             <Box className="title">
@@ -85,7 +68,7 @@ export default function PlaneConfig() {
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
                                     Aircraft ID:
                                 </Typography>
-                                <input className="user-input" type='text'
+                                <input style={{marginLeft: 'auto'}} className="user-input" type='text'
                                     placeholder='Enter ID (optional)...' 
                                     onBlur={(blurEvent) => setID(blurEvent.target.value)} />
                             </Box>
@@ -95,6 +78,7 @@ export default function PlaneConfig() {
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
                                     Initial Velocity:
                                 </Typography>
+                                <Typography variant="body2" sx={{fontWeight: 'lighter', color:'gray', ml:'auto', mr: '4px'}}>m/s</Typography>
                                 <input className="user-input" type='number' id='velocity-input'
                                     placeholder='Enter velocity...' 
                                     onBlur={(blurEvent) => setVelocity(blurEvent.target.valueAsNumber)} />
@@ -105,8 +89,9 @@ export default function PlaneConfig() {
                                 <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
                                     Acceleration:
                                 </Typography>
+                                <Typography variant="body2" sx={{fontWeight: 'lighter', color:'gray', ml:'auto', mr: '4px'}}>m/s²</Typography>
                                 <input className="user-input" type='number' id='acceleration-input'
-                                    placeholder='Enter acceleration...' 
+                                    placeholder='Enter acceleration (optional)...' 
                                     onBlur={(blurEvent) => setAccel(blurEvent.target.valueAsNumber)} />
                             </Box>
 

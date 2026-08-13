@@ -51,7 +51,6 @@ export default function LeftClickEarth() {
       const lat = cartographic.latitude * RAD_TO_DEG;
 
       if (!startPoint) {
-        console.log('Start point saved! Click again for the end point.');
         setStartPoint({ lat: lat, lon: lon });
       } 
       else {
@@ -115,7 +114,6 @@ function addFlight(
         id: aircraftID,
         initial_velocity: velocity,
         acceleration: acceleration,
-        heading: result.heading        
       }, 
       start_point: startPoint,
       end_point: endPoint,

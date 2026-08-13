@@ -66,8 +66,7 @@ export default function setupCollisionEventHandlers(
 // ***************** collision calculations **********
 
 // allowed time difference for collision check
-const timeDiff = 3;//seconds
-
+const hazardTimeDiff = 3;//seconds
 function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : CollisionData | null {
 
     if (!potentialCollision(flightA, flightB)) return null;
@@ -111,7 +110,13 @@ function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : Collis
         if (!timeA || !timeB) continue;
 
         // if both planes reached this point at the same time, they collided
-        if (Math.abs(timeA - timeB) <= timeDiff) {
+        const timeDiff = Math.abs(timeA - timeB);
+
+        console.log(`flight ${flightA.aircraft.id} reached the collision point in ${timeA}`);
+        console.log(`flight ${flightB.aircraft.id} reached the collision point in ${timeB}`);
+        console.log(`flights time difference: ${timeDiff} seconds`);        
+
+        if (timeDiff <= hazardTimeDiff) {
             collisionData = {
                 planeA: flightA.aircraft,
                 planeB: flightB.aircraft,

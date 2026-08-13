@@ -48,6 +48,8 @@ export default function WheelClickEarth() {
         }
     }
 
+    const closeCard = () => setPickedFlight(undefined);
+
     return (
         <>
             <ScreenSpaceEventHandler>
@@ -56,13 +58,25 @@ export default function WheelClickEarth() {
 
             <div
                 style={{
-                top: '0px', left: '35px',
-                position: 'absolute',
-                zIndex: 9999,
-                }}
-            >
-                {/* trigger flight path display card visibility when the user actualy picks a flight */}
-                {pickedFlight && <FlightPathDisplay flight={pickedFlight} />}
+                    top: '0px', left: '35px',
+                    position: 'absolute',
+                    zIndex: 9999,
+                }}>
+
+                <div style={{position: 'relative'}}>
+
+                    {/* trigger flight path display card visibility when the user actualy picks a flight */}
+                    {pickedFlight && <FlightPathDisplay flight={pickedFlight}/>}
+
+                    {/* btn to close card manually */}
+                    {pickedFlight && <button style={{
+                        position: 'absolute', background: 'transparent', boxShadow: 'none',
+                        height: '10px', width: '10px', color: 'gray', fontSize: '15px', fontWeight: 'lighter',
+                        top: '30px', right: '0px'
+                    }}
+                    onClick={closeCard}> x </button>}   
+
+                </div>             
             </div>
         </>
     );

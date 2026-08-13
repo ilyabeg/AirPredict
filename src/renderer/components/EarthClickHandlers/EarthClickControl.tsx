@@ -29,8 +29,14 @@ export default function EarthClickControl() {
     // connect the start time to the components mount time and only at this point in time
     useEffect(() => {
         masterStartRef.current = Cesium.JulianDate.fromDate(new Date());
-        setViewerClockConfig(cesiumContext.viewer, masterStartRef.current);
+        setViewerClockConfig(cesiumContext.viewer!, masterStartRef.current);
     }, []);
+
+    // reset master time each time the flights change
+    useEffect(() => {
+        if (!masterStartRef) return;
+        cesiumContext.viewer!.clock.currentTime = masterStartRef.current!;
+    }, [allFlights]);
 
     return(
         <>
@@ -71,7 +77,7 @@ export default function EarthClickControl() {
     );
 }
 
-function setViewerClockConfig(viewer: any, start: Cesium.JulianDate) : void {
-    viewer.clock.startTime = start.clone();
+function setViewerClockConfig(viewer: Cesium.Viewer, start: Cesium.JulianDate) : void {
+    viewer.clock.startTime = start.clone();    
     viewer.clock.multiplier = 1;
 }
