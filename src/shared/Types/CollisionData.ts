@@ -7,5 +7,6 @@ export type CollisionData = {
   coordinates: {
     lat: number,
     lon: number
-  }
+  },
+  time_difference: number
 };

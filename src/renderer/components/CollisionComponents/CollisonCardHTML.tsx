@@ -22,7 +22,7 @@ export default function CollisionCard({collision}: CollisionDataProp) {
                   <Box className="collision-title">
                     <WarningAmberIcon sx={{ mr: 1 }} />
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
-                      COLLISION ALERT
+                      {(collision.time_difference <= 1) ? 'COLLISION ALERT!' : 'Potential Collision!'}
                     </Typography>
                   </Box>
                   
@@ -45,7 +45,7 @@ export default function CollisionCard({collision}: CollisionDataProp) {
                   </Box>
         
                   {/* impact time */}
-                  <Box className="collision-data-style">
+                  <Box className="collision-data-style" sx={{color: (collision.time_difference <= 1) ? '#ff5252' : '#ffb74d'}}>
                     <TimerIcon sx={{ fontSize: 20, mr: 1 }} />
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                       Impact time: {Math.round(collision.time_of_collision)}s
@@ -53,14 +53,21 @@ export default function CollisionCard({collision}: CollisionDataProp) {
                   </Box>
         
                   {/* coordinates */}
-                  <Box className="collision-data-style">
+                  <Box className="collision-data-style" sx={{color: (collision.time_difference <= 1) ? '#ff5252' : '#ffb74d'}}>
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                       Latitude: {collision.coordinates.lat.toFixed(10).slice(0, -5)} {/* toFixed() instead of Math.round() to keep percise number */}
                     </Typography>
                   </Box>
-                  <Box className="collision-data-style">
+                  <Box className="collision-data-style" sx={{color: (collision.time_difference <= 1) ? '#ff5252' : '#ffb74d'}}>
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
                       Longitude: {collision.coordinates.lon.toFixed(10).slice(0, -5)}
+                    </Typography>
+                  </Box>
+
+                  {/* Plane time difference (to the collision point) */}
+                  <Box className="collision-data-style" sx={{color: (collision.time_difference <= 1) ? '#ff5252' : '#ffb74d'}}>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                      Time difference: {~collision.time_difference} seconds
                     </Typography>
                   </Box>
         
@@ -68,8 +75,8 @@ export default function CollisionCard({collision}: CollisionDataProp) {
               </Card>
         
               {/* pointer line and ground dot */}
-              <div className="collision-line" />
-              <div className="collision-point" />
+              <div className={(collision.time_difference <= 1) ? 'precise-collision-line' : 'collision-warning-line'}/>
+              <div className={(collision.time_difference <= 1) ? 'precise-collision-dot' : 'collision-warning-dot'}/>
               
             </Box>
         </>
