@@ -7,16 +7,18 @@ export default function CollisionControl() {
   const [activeCollisions, setActiveCollisions] = useState<CollisionData[]>([]);
 
   useEffect(() => {
-    const handleDisplayCollision = (event: any) => {
-      const newCollision: CollisionData = event.detail;
+    const handleDisplayCollision = (event: Event) => {
+      const e = event as CustomEvent<CollisionData>;
+      const newCollision = e.detail;
       
       // add the new crash to the array, keeping all previous crashes
       setActiveCollisions(prevCrashes => [...prevCrashes, newCollision]);
       // React prvious state: updtaes the previous values with an updater function instead of passing by value
     };
 
-    const handleRemoveCollision = (event: any) => {
-      const flightID: string = event.detail;
+    const handleRemoveCollision = (event: Event) => {
+      const e = event as CustomEvent<string>;
+      const flightID: string = e.detail;
       
       // remove old crash from the array if one of the flight paths got removed, meaning there is no crash anymore
       setActiveCollisions(prevCrashes => prevCrashes.filter(

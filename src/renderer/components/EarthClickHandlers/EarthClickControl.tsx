@@ -32,11 +32,41 @@ export default function EarthClickControl() {
         setViewerClockConfig(cesiumContext.viewer!, masterStartRef.current);
     }, []);
 
+
     // reset master time each time the flights change
     useEffect(() => {
         if (!masterStartRef) return;
         cesiumContext.viewer!.clock.currentTime = masterStartRef.current!;
     }, [allFlights]);
+
+
+    // use effect to register window event listener to add hardcoded flights
+    useEffect(() => {
+        const addHardcodedFlight = (event: Event) => {
+            const e = event as CustomEvent<FlightPath>;
+            const newFlight = e.detail;
+            setFlights(prevFlights => [...prevFlights, newFlight]);
+        }
+
+        const removeHardcodedFlight = (event: Event) => {
+            const e = event as CustomEvent<FlightPath>;
+            const removeFlight = e.detail;
+            setFlights(prevFlights => prevFlights.filter(
+                flight => flight.aircraft.id !== removeFlight.aircraft.id
+            ));
+        }
+
+        // attach the custom event listeners to the window
+        window.addEventListener('display-flight', addHardcodedFlight);
+        window.addEventListener('remove-flight', removeHardcodedFlight);
+
+        // remove listeners when component unmounts/re-renders
+        return () => {
+            window.removeEventListener('display-flight', addHardcodedFlight);
+            window.removeEventListener('remove-flight', removeHardcodedFlight);
+        }
+    }, []);
+
 
     return(
         <>

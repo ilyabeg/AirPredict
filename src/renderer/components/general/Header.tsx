@@ -28,6 +28,7 @@ export default function Header() {
         // add flight in backend and render harcoded collisions
         HARDCODED_COLLISIONS.forEach(flight => {
             invokeServer('register_flight', flight);
+            dispatchWindowEvent('display-flight', flight);
         });
     };
 
@@ -36,6 +37,7 @@ export default function Header() {
         HARDCODED_COLLISIONS.forEach(flight => {
             invokeServer('remove_flight', flight.aircraft.id);
             dispatchWindowEvent('remove-collision-card', flight.aircraft.id);
+            dispatchWindowEvent('remove-flight', flight);
         });
     };
 
