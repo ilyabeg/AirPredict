@@ -5,6 +5,7 @@ import { IpcRendererEvent } from 'electron';
 import { ErrorMessage } from '../../shared/Types/ErrorMessage';
 import { offServerEvent, onServerEvent } from '../IPC/OnServerEvent';
 import { CollisionData } from 'shared/Types/CollisionData';
+import dispatchWindowEvent from 'renderer/WindowEvents/DispatchWindowEvent';
 
 export default function useServerEventHandlers() {
 
@@ -14,6 +15,7 @@ export default function useServerEventHandlers() {
       console.error(`Error from server: ${err.stringMessage}`);
     },[]);
 
+
   // callback function for collision alerts and displaying them in the UI
   const collisionAlertHandler = useCallback(
     (_event: IpcRendererEvent, collision: CollisionData) => {
@@ -22,9 +24,9 @@ export default function useServerEventHandlers() {
         at time: ${collision.time_of_collision}`
       );
       // render the collision display
-      const alertEvent = new CustomEvent('display-collision-card', { detail: collision });
-      window.dispatchEvent(alertEvent);
+      dispatchWindowEvent('display-collision-card', collision);
   }, []);
+
 
   useEffect(() => {
     onServerEvent('error_message', errorMessageHandler, false);

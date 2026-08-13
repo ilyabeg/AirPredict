@@ -38,7 +38,7 @@ export default function FlightPathDisplay({flight}: FlightPathDisplayProps) {
                     <Box className="title">
                         <GlobeIcon sx={{ fontSize: 19, mr: 1, color: '#ffffff' }} />
                         <Typography variant="body2">
-                            <strong>AirCraft ID:</strong> {flight.aircraft.id.substring(0, 8)}
+                            <strong>AirCraft ID:</strong> {flight.aircraft.id.substring(0, 20)}
                         </Typography>
                     </Box>
 

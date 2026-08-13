@@ -2,6 +2,9 @@ import { useContext } from 'react';
 import '../../Styles/Header.css';
 import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import { AppStateContext, app_state } from '../../App';
+import { HARDCODED_COLLISIONS } from '../../../shared/utils/HardcodedCollisions.utils';
+import invokeServer from 'renderer/IPC/InvokeServer';
+import dispatchWindowEvent from 'renderer/WindowEvents/DispatchWindowEvent';
 
 export default function Header() {
 
@@ -21,12 +24,29 @@ export default function Header() {
     // it is sometimes better to just let the component re-render because react is lightning
     // fast with re-rendering small and simple components.
 
+    const addCollisions = () => {
+        // add flight in backend and render harcoded collisions
+        HARDCODED_COLLISIONS.forEach(flight => {
+            invokeServer('register_flight', flight);
+        });
+    };
+
+    const removeCollisions = () => {
+        // delete harcoded collision flights from backend
+        HARDCODED_COLLISIONS.forEach(flight => {
+            invokeServer('remove_flight', flight.aircraft.id);
+            dispatchWindowEvent('remove-collision-card', flight.aircraft.id);
+        });
+    };
+
     return (
         <header className="app-header">
             <div className='planes-img'>
                 <ConnectingAirportsIcon sx={{ fontSize: 45, mt: 1, mr: .5, color: 'whitesmoke' }} />
             </div>
             <h1 className="header-title">AirPredict</h1>
+            <button onClick={addCollisions}>Add Collisions</button>
+            <button onClick={removeCollisions}>Remove Collisions</button>
             <button onClick={handleClick}>Add Flight</button>
         </header>
     );

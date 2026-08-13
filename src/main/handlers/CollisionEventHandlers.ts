@@ -21,6 +21,7 @@ export default function setupCollisionEventHandlers(
         const res = await forwardErrors(async () =>
         {
             // add flight to flights array
+            if (all_flights.find(flight => flight.aircraft.id === newFlight.aircraft.id)) return;
             all_flights.push(newFlight);
 
             // check for collisions
@@ -206,7 +207,7 @@ function checkHeadOnCollision(flightA: FlightPath, flightB: FlightPath): Collisi
     const headingDiff = Math.abs(flightA.heading - flightB.heading);
 
     // directly heading towards each other
-    if (headingDiff >= 180 || headingDiff <= 177) return null;
+    if ((headingDiff > 183 && headingDiff < 177) || (headingDiff > 3 && headingDiff < 357)) return null;
 
     const collisTime = KinematicMath.timeToReachHeadOnCollisionPoint(
         flightA.start_point, flightB.start_point,

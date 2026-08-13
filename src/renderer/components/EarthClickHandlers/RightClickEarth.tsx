@@ -4,6 +4,7 @@ import invokeServer from '../../IPC/InvokeServer';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import { FlightsContext } from './EarthClickControl';
 import {FlightPath} from '../../../shared/Types/FlightPath';
+import dispatchWindowEvent from 'renderer/WindowEvents/DispatchWindowEvent';
 
 
 export default function RightClickEarth() {
@@ -65,6 +66,5 @@ function removeFlight(
     setFlights(prev => prev.filter(flight => flight.aircraft.id !== flightID));
 
     // remove collision ascosiated with this flight if there are collisions
-    const removeCollisionEvent = new CustomEvent('remove-collision-card', {detail: flightID});
-    window.dispatchEvent(removeCollisionEvent); 
+    dispatchWindowEvent('remove-collision-card', { flightID });
 }

@@ -32,7 +32,7 @@ export default function CollisionCard({collision}: CollisionDataProp) {
                   <Box className="collision-prop-style">
                     <FlightTakeoffIcon sx={{ fontSize: 18, mr: 1, color: '#90caf9' }} />
                     <Typography variant="body2">
-                      <strong>Flight A:</strong> {collision.planeA.id.substring(0, 8)}
+                      <strong>Flight A:</strong> {collision.planeA.id}
                     </Typography>
                   </Box>
         
@@ -40,7 +40,7 @@ export default function CollisionCard({collision}: CollisionDataProp) {
                   <Box className="collision-prop-style">
                     <FlightTakeoffIcon sx={{ fontSize: 18, mr: 1, color: '#90caf9' }} />
                     <Typography variant="body2">
-                      <strong>Flight B:</strong> {collision.planeB.id.substring(0, 8)}
+                      <strong>Flight B:</strong> {collision.planeB.id}
                     </Typography>
                   </Box>
         
