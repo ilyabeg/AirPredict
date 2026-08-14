@@ -34,8 +34,8 @@ export function timeToReachDistance(
   // ... = spread operator -> return the min element inside the array
 }
 
-// head on collision, x1(t) = x2(t) gives us the time of the collision
-export function timeToReachHeadOnCollisionPoint(
+// x1(t) = x2(t) gives us the time of the collision
+export function timeOfIntersection(
   startPoint1: {lat: number, lon: number},
   startPoint2: {lat: number, lon: number},
   initialVelocity1: number,
@@ -44,22 +44,38 @@ export function timeToReachHeadOnCollisionPoint(
   acceleration2: number
 ) : number | null {
 
-  const A = (acceleration1 - acceleration2) / 2;
-  const B = initialVelocity1 - initialVelocity2;
+  const A = (acceleration1 - acceleration2) / 2; console.log(`a1 - a2 = ${A}`);
+  const B = initialVelocity1 - initialVelocity2; console.log(`v1 - v2 = ${B}`);
    // distance between the two starting points (|x1 - x2|)
-  const C = Geodesic.WGS84.Inverse(startPoint1.lat, startPoint1.lon, startPoint2.lat, startPoint2.lon).s12!;
-  const discriminant = B ** 2 - 4 * A * C;
+  const C = -Geodesic.WGS84.Inverse(startPoint1.lat, startPoint1.lon, startPoint2.lat, startPoint2.lon).s12!;
+  console.log(`d1 - d2 = ${C}`);
 
-  if (discriminant < 0) return null; // no solutions
+  // משוואה ריבועית
+  if (A !== 0) {
+    const discriminant = B ** 2 - 4 * A * C;
+    console.log(`discriminant = ${discriminant}`);
 
-  const sqrtDisc = Math.sqrt(discriminant);
-  const solution1 = (-B + sqrtDisc) / (2 * A);
-  const solution2 = (-B - sqrtDisc) / (2 * A);
+    if (discriminant < 0) return null; // no solutions
 
-  const timeSolutions = [solution1, solution2].filter(time => time > 0); // get only the positive time solutions
-  
-  // if there is at least 1 solution return the earliest
-  return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null;
+    const sqrtDisc = Math.sqrt(discriminant);    console.log(`sqrtDisc = ${sqrtDisc}`);
+    const solution1 = (-B + sqrtDisc) / (2 * A); console.log(`solution1 = ${solution1}`);
+    const solution2 = (-B - sqrtDisc) / (2 * A); console.log(`solution2 = ${solution2}`);
+
+    const timeSolutions = [solution1, solution2].filter(time => time > 0); // get only the positive time solutions
+    
+    // if there is at least 1 solution return the earliest
+    return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null;
+  }
+
+  // if A = 0, B != 0 -> t = -C/B
+  if (Math.round(A) < 0.0001 && B !== 0) {
+    return -C / B;
+  }
+
+  // C = 0 -> no solutions
+  if (!A && !B) return null;
+
+  return 0;
 }
 
 export function positionAtTime(
@@ -69,8 +85,6 @@ export function positionAtTime(
 
   const initialVelocity = flight.aircraft.initial_velocity;
   const acceleration = flight.aircraft.acceleration;
-
-  if (initialVelocity <= 0) return null; // never gets there
 
   // d(t) = v*t + 0.5 * a * t^2 = distance after time t
   const distance = (initialVelocity * time) + (0.5 * acceleration * time ** 2);
