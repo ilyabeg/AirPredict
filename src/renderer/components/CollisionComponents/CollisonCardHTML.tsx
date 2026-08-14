@@ -48,7 +48,7 @@ export default function CollisionCard({collision}: CollisionDataProp) {
                   <Box className="collision-data-style" sx={{color: (collision.time_difference <= 1) ? '#ff5252' : '#ffb74d'}}>
                     <TimerIcon sx={{ fontSize: 20, mr: 1 }} />
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      Impact time: {Math.round(collision.time_of_collision)}s
+                      Impact time: {Math.round(collision.time_of_collision)} seconds
                     </Typography>
                   </Box>
         
@@ -67,7 +67,7 @@ export default function CollisionCard({collision}: CollisionDataProp) {
                   {/* Plane time difference (to the collision point) */}
                   <Box className="collision-data-style" sx={{color: (collision.time_difference <= 1) ? '#ff5252' : '#ffb74d'}}>
                     <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-                      Time difference: {~collision.time_difference} seconds
+                      Time difference: ~{collision.time_difference.toFixed(10).slice(0, -5)} seconds
                     </Typography>
                   </Box>
         

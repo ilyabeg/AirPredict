@@ -36,7 +36,7 @@ export const HARDCODED_COLLISIONS: FlightPath[] = [
     },
     {
         // Reaches intersection in 1672.166 seconds (Diff: 3.0s)
-        aircraft: { id: "FLIGHT_2B_CONSTANT", initial_velocity: 330.6345, acceleration: 0 },
+        aircraft: { id: "FLIGHT_2B_CONSTANT", initial_velocity: 330.645, acceleration: 0 },
         start_point: { lat: -5, lon: 100 },
         end_point: { lat: 5, lon: 100 },
         distance: 1105751.968,
