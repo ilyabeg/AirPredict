@@ -66,5 +66,5 @@ function removeFlight(
     setFlights(prev => prev.filter(flight => flight.aircraft.id !== flightID));
 
     // remove collision ascosiated with this flight if there are collisions
-    dispatchWindowEvent('remove-collision-card', { flightID });
+    dispatchWindowEvent('remove-collision-card', flightID);
 }
