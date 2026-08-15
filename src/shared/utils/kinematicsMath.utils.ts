@@ -44,22 +44,20 @@ export function timeOfIntersection(
   acceleration2: number
 ) : number | null {
 
-  const A = (acceleration1 - acceleration2) / 2; console.log(`a1 - a2 = ${A}`);
-  const B = initialVelocity1 - initialVelocity2; console.log(`v1 - v2 = ${B}`);
+  const A = (acceleration1 - acceleration2) / 2;
+  const B = initialVelocity1 - initialVelocity2;
    // distance between the two starting points (|x1 - x2|)
   const C = -Geodesic.WGS84.Inverse(startPoint1.lat, startPoint1.lon, startPoint2.lat, startPoint2.lon).s12!;
-  console.log(`d1 - d2 = ${C}`);
 
   // משוואה ריבועית
   if (A !== 0) {
     const discriminant = B ** 2 - 4 * A * C;
-    console.log(`discriminant = ${discriminant}`);
 
     if (discriminant < 0) return null; // no solutions
 
-    const sqrtDisc = Math.sqrt(discriminant);    console.log(`sqrtDisc = ${sqrtDisc}`);
-    const solution1 = (-B + sqrtDisc) / (2 * A); console.log(`solution1 = ${solution1}`);
-    const solution2 = (-B - sqrtDisc) / (2 * A); console.log(`solution2 = ${solution2}`);
+    const sqrtDisc = Math.sqrt(discriminant);    
+    const solution1 = (-B + sqrtDisc) / (2 * A);
+    const solution2 = (-B - sqrtDisc) / (2 * A);
 
     const timeSolutions = [solution1, solution2].filter(time => time > 0); // get only the positive time solutions
     
@@ -67,7 +65,7 @@ export function timeOfIntersection(
     return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null;
   }
 
-  // if A = 0, B != 0 -> t = -C/B
+  // if A ~= 0, B != 0 -> t = -C/B
   if (Math.round(A) < 0.0001 && B !== 0) {
     return -C / B;
   }

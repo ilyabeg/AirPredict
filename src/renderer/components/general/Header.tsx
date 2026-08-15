@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import '../../Styles/Header.css';
 import ConnectingAirportsIcon from '@mui/icons-material/ConnectingAirports';
 import { AppStateContext, app_state } from '../../App';
@@ -24,21 +24,31 @@ export default function Header() {
     // it is sometimes better to just let the component re-render because react is lightning
     // fast with re-rendering small and simple components.
 
+
+    // state to remember if collisions are currently displayed
+    const [collisionsVisible, setColVisibility] = useState<boolean>(false);
+
     const addCollisions = () => {
+        if (collisionsVisible) return;
+
         // add flight in backend and render harcoded collisions
         HARDCODED_COLLISIONS.forEach(flight => {
             invokeServer('register_flight', flight);
             dispatchWindowEvent('display-flight', flight);
         });
+        setColVisibility(true);
     };
 
     const removeCollisions = () => {
+        if (!collisionsVisible) return;
+
         // delete harcoded collision flights from backend
         HARDCODED_COLLISIONS.forEach(flight => {
             invokeServer('remove_flight', flight.aircraft.id);
             dispatchWindowEvent('remove-collision-card', flight.aircraft.id);
             dispatchWindowEvent('remove-flight', flight);
         });
+        setColVisibility(false);
     };
 
     return (
