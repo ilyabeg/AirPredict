@@ -110,7 +110,7 @@ function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : Collis
         // if both planes reached this point at aproximately the same time, they collided
         const timeDiff = Math.abs(timeA - timeB);
 
-        // ********************************************************* debug
+        // *************************************************** DEBUG
         logCollisionDebug(flightA, flightB, timeA, timeB, timeDiff);
 
         if (timeDiff <= hazardTimeDiff) {
@@ -187,14 +187,13 @@ function isPointOnPath(
 }
 
 // if the planes are basicaly on the same exact path (great circle)
+const collisionErrorMargin = 1;//meter
 function checkParallelCollision(flightA: FlightPath, flightB: FlightPath): CollisionData | null {        
 
     const headingDiff = Math.abs(flightA.heading - flightB.heading);
     // not heading towards each other
     if ((headingDiff > 183 && headingDiff < 357) || (headingDiff > 3 && headingDiff < 177)) return null;
 
-    const x1 = flightA.start_point;
-    const x2 = flightB.start_point;
     const v1 = flightA.aircraft.initial_velocity;
     const v2 = flightB.aircraft.initial_velocity;
     const a1 = flightA.aircraft.acceleration;
@@ -202,58 +201,54 @@ function checkParallelCollision(flightA: FlightPath, flightB: FlightPath): Colli
     let collisTime;
 
     // heading towards each other (head on) -> v2 is negative
-    if (headingDiff > 177 && headingDiff < 183) 
-        collisTime = KinematicMath.timeOfIntersection(x1, x2, v1, -v2, a1, a2);
-    else
-        collisTime = KinematicMath.timeOfIntersection(x1, x2, v1, v2, a1, a2);
-
+    collisTime = areHeadOn(headingDiff) 
+        ? KinematicMath.timeOfIntersection(flightA, flightB, v1, -v2, a1, a2) 
+        : KinematicMath.timeOfIntersection(flightA, flightB, v1, v2, a1, a2);
+        
     if (!collisTime) return null;
 
-    // d = v*t + 0.5 * a * t^2
+    // d = v*t + 0.5 * a * t^2 -> the flight's distance from start to collision point
     const flightDistA = v1 * collisTime + 0.5 * a1 * collisTime ** 2;
     const flightDistB = v2 * collisTime + 0.5 * a2 * collisTime ** 2;
     if (!flightDistA || !flightDistB) return null;
 
-    // both flights' amount time to reach the intersection point
-    const timeA = KinematicMath.timeToReachDistance(flightDistA, v1, a1);
-    const timeB = KinematicMath.timeToReachDistance(flightDistB, v2, a2);
-    if (!timeA || !timeB) return null;
+    // both flights' point after flying the amount of distance 'flightDist'
+    const collisFlightA = Geodesic.WGS84.Direct(flightA.start_point.lat, flightA.start_point.lon, flightA.heading, flightDistA);
+    const collisFlightB = Geodesic.WGS84.Direct(flightB.start_point.lat, flightB.start_point.lon, flightB.heading, flightDistB);
+    if (!collisFlightA || !collisFlightB) return null;
 
-    // if both planes reached this point at aproximately the same time, they collided
-    const timeDiff = Math.abs(timeA - timeB);
+    // the distance between the supposed collision point on the flight paths
+    const distBetweenPoints = Geodesic.WGS84.Inverse(collisFlightA.lat2!, collisFlightA.lon2!, collisFlightB.lat2!, collisFlightB.lon2!).s12;
+    if (distBetweenPoints! > collisionErrorMargin) return null;
 
-    // get the point of collision based on plane A's starting position, direction, and distance
-    const collisPoint = Geodesic.WGS84.Direct(flightA.start_point.lat, flightA.start_point.lon, flightA.heading, flightDistA);
-    if (!collisPoint) return null;
-
-    // is the collision point on the flight path
+    // is the collision point on the flight paths
     const onPathA = isPointOnPath(
         flightA.start_point, flightA.end_point,
-        {lat: collisPoint.lat2!, lon: collisPoint.lon2!}
+        {lat: collisFlightA.lat2!, lon: collisFlightA.lon2!}
     );
     const onPathB = isPointOnPath(
         flightB.start_point, flightB.end_point, 
-        {lat: collisPoint.lat2!, lon: collisPoint.lon2!}
+        {lat: collisFlightB.lat2!, lon: collisFlightB.lon2!}
     );
 
-    if (onPathA && onPathB && timeDiff <= hazardTimeDiff) {
-
-        // ********************************************************* debug
-        logCollisionDebug(flightA, flightB, timeA, timeB, timeDiff);
+    if (onPathA && onPathB) {
+        // ****************************************************** DEBUG
+        logCollisionDebug(flightA, flightB, collisTime, collisTime, 0);
     
         return {
             planeA: flightA.aircraft,
             planeB: flightB.aircraft,
             time_of_collision: collisTime,
             coordinates: { 
-                lat: collisPoint.lat2!,
-                lon: collisPoint.lon2!
+                lat: collisFlightA.lat2!,
+                lon: collisFlightA.lon2!
             },
-            time_difference: timeDiff
+            time_difference: 0 // parallel flights allways reach the collision at the same exact time
         };
     };        
     return null;
 }
+const areHeadOn = (headingDiff: number) => (headingDiff > 177 && headingDiff < 183);
 
 function logCollisionDebug(
     flightA: FlightPath, flightB: FlightPath,

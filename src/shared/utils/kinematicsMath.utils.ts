@@ -1,6 +1,17 @@
 import { Geodesic } from 'geographiclib-geodesic';
 import { FlightPath } from 'shared/Types/FlightPath';
 
+function calcQuadraticFormula(A: number, B: number, C: number) {
+  const discriminant = B ** 2 - 4 * A * C;
+  if (discriminant < 0) return null; // no solutions
+
+  const sqrtDisc = Math.sqrt(discriminant);    
+  const solution1 = (-B + sqrtDisc) / (2 * A);
+  const solution2 = (-B - sqrtDisc) / (2 * A);
+
+  return [solution1, solution2];
+}
+
 // get the time to reach the distance
 export function timeToReachDistance(
   distance: number,
@@ -16,19 +27,14 @@ export function timeToReachDistance(
 
   // משוואה ריבועית
   // At^2 + Bt - C = 0 -> t 1,2
-  const a = 0.5 * acceleration;
-  const b = initialVelocity;
-  const c = -distance;
-  const discriminant = b ** 2 - 4 * a * c;
+  let timeSolutions = calcQuadraticFormula(
+    0.5 * acceleration, 
+    initialVelocity, 
+    -distance
+  );
+  if (!timeSolutions) return null;
 
-  if (discriminant < 0) return null; // no solutions
-
-  const sqrtDisc = Math.sqrt(discriminant);
-  const solution1 = (-b + sqrtDisc) / (2 * a);
-  const solution2 = (-b - sqrtDisc) / (2 * a);
-
-  const timeSolutions = [solution1, solution2].filter(time => time > 0); // get only the positive time solutions
-
+  timeSolutions = timeSolutions.filter(time => time > 0); // get only the positive time solutions
   // if there is at least 1 solution return the earliest
   return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null; 
   // ... = spread operator -> return the min element inside the array
@@ -36,8 +42,8 @@ export function timeToReachDistance(
 
 // x1(t) = x2(t) gives us the time of the collision
 export function timeOfIntersection(
-  startPoint1: {lat: number, lon: number},
-  startPoint2: {lat: number, lon: number},
+  flightA: FlightPath,
+  flightB: FlightPath,
   initialVelocity1: number,
   initialVelocity2: number,
   acceleration1: number,
@@ -46,28 +52,30 @@ export function timeOfIntersection(
 
   const A = (acceleration1 - acceleration2) / 2;
   const B = initialVelocity1 - initialVelocity2;
+  
    // distance between the two starting points (|x1 - x2|)
-  const C = -Geodesic.WGS84.Inverse(startPoint1.lat, startPoint1.lon, startPoint2.lat, startPoint2.lon).s12!;
+  const dist = Geodesic.WGS84.Inverse(
+    flightA.start_point.lat, flightA.start_point.lon, 
+    flightB.start_point.lat, flightB.start_point.lon
+  ).s12!;
+
+  // determine the sign of the distance 
+  const C = (isInFront(flightA, flightB)) ? dist: -dist;
 
   // משוואה ריבועית
   if (A !== 0) {
-    const discriminant = B ** 2 - 4 * A * C;
+    let timeSolutions = calcQuadraticFormula(A, B, C);
+    if (!timeSolutions) return null;
 
-    if (discriminant < 0) return null; // no solutions
-
-    const sqrtDisc = Math.sqrt(discriminant);    
-    const solution1 = (-B + sqrtDisc) / (2 * A);
-    const solution2 = (-B - sqrtDisc) / (2 * A);
-
-    const timeSolutions = [solution1, solution2].filter(time => time > 0); // get only the positive time solutions
-    
+    timeSolutions = timeSolutions.filter(time => time > 0); // get only the positive time solutions
     // if there is at least 1 solution return the earliest
     return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null;
   }
 
-  // if A ~= 0, B != 0 -> t = -C/B
-  if (Math.round(A) < 0.0001 && B !== 0) {
-    return -C / B;
+  // if A = 0, B != 0 -> t = -C/B
+  if (B !== 0) {
+    const solution = -C / B;
+    return (solution >= 0) ? solution : null;
   }
 
   // C = 0 -> no solutions
@@ -75,6 +83,29 @@ export function timeOfIntersection(
 
   return 0;
 }
+
+// helper func to check which plane is infrnot (A or B),
+// if it is A the distance is positive, if its B the distance is negative.
+function isInFront(
+  flightA: FlightPath,
+  flightB: FlightPath
+) : boolean {
+
+  const headingFromBtoA = Geodesic.WGS84.Inverse(
+    flightB.start_point.lat, flightB.start_point.lon,
+    flightA.start_point.lat, flightA.start_point.lon
+  ).azi1!;
+
+  const headingDiff = Math.abs(headingFromBtoA - flightA.heading);
+
+  // basicaly heading the same direction
+  if (headingDiff <= 3)
+    return true; // A is in front of B
+
+  // B is in front of A
+  return false;
+}
+
 
 export function positionAtTime(
   flight: FlightPath,
@@ -99,6 +130,5 @@ export function positionAtTime(
       lon: res.lon2!
     };
   }
-  
   return null;
 }
