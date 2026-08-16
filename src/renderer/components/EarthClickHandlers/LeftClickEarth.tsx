@@ -21,12 +21,22 @@ export default function LeftClickEarth() {
   if (!flightsContextProp || !viewer || !configFlightContext || appStateContext?.appState !== app_state.CLICKING) 
     return;
 
+  // reset configurations
+  const resetConfigContext = () => {
+    configFlightContext.setConfigFlight({
+      aircraftID: "",
+      velocity: 0,
+      acceleration: -1
+    });
+  }
+
   // check if the temporary flight configs exist already
   const newFlightId = configFlightContext.configFlight.aircraftID;
   
   if (flightsContextProp.allFlights.find(flight => flight.aircraft.id === newFlightId)) {
     alert("Flight identificator must be unique.");
     appStateContext.setAppState(app_state.DEFAULT);
+    resetConfigContext();
     return; /*(
       <FadeMessage message={"Flight identificator must be unique."}/>
     );*/
@@ -65,6 +75,7 @@ export default function LeftClickEarth() {
 
           // add the new flight and reset
           addFlight(result, startPoint, endPoint, flightsContextProp, configFlightContext);
+          resetConfigContext();
           resetStartAndState();        
         } 
         catch (error) {
@@ -121,13 +132,6 @@ function addFlight(
       heading: result.heading          
     };
   flightsContextProp.setFlights(prevFlights => [...prevFlights, newFlight]); 
-
-  // reset configurations
-  configContext.setConfigFlight({
-    aircraftID: "",
-    velocity: 0,
-    acceleration: -1
-  });
 
   // register the flight in the backend
   invokeServer('register_flight', newFlight);

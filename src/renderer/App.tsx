@@ -6,7 +6,7 @@ import 'cesium/Build/Cesium/Widgets/widgets.css';
 import EarthClickControl from './components/EarthClickHandlers/EarthClickControl';
 import CollisionControl from './components/CollisionComponents/CollisionControl';
 import PlaneConfig from './components/FlightDisplayComponents/PlaneConfig';
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import FadeMessage from './components/general/FadeMessage';
 
 // tell cesium exactly where to find all cesium assets
@@ -40,6 +40,11 @@ export const ConfigFlightContext = createContext<ConfigFlightProp | null>(null);
 
 
 export default function App() {
+
+  useEffect(() => {
+    document.title = 'AirPredict';
+  }, []);
+
   useServerEventHandlers();
 
   // save app state for configuring a flight and adding it to memory
