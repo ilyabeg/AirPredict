@@ -1,0 +1,30 @@
+// proto3 is the modern standard protocol buffers language version
+syntax = "proto3"; // <- tells the compiler to use version 'proto3'
+
+// package/namespace to avoid naming collisions
+package collisionGRPC;
+
+service CollisionService {
+    rpc PrintCollision (CollisionData) returns (CollisionResponce);
+}
+
+// CollisionData definition
+message CollisionData {
+    string planeA = 1;
+    string planeB = 2;
+    double time_of_collision = 3;
+    double lat = 4;
+    double lon = 5;
+    double time_difference = 6;
+}
+
+// server response definition
+message CollisionResponce {
+    bool success = 1;
+}
+
+// personal note: the field numbers/tags is gRPC's way of compressing the sent data.
+//                instead of sending strings it sends the field numbers to 'pack' the 
+//                variables. this way the protobuffers perform better than JSON or XML, 
+//                for instance. and to 'unpack' the data, the receiving end sees which 
+//                field represents the received number to translate the actual data back.

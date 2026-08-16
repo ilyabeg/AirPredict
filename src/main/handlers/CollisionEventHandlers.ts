@@ -24,21 +24,20 @@ export default function setupCollisionEventHandlers(
 
             // check for collisions
             for (const existingFlight of all_flights) {
+
                 if (newFlight === existingFlight || !potentialCollision(newFlight, existingFlight)) continue; // ignore            
                 console.log(`\npotential collision between flight ${newFlight.aircraft.id} and flight ${existingFlight.aircraft.id} has been identified.`);
 
                 let collision = checkNormalCollision(newFlight, existingFlight);
 
-                // if they collided normally
-                if (collision) {
-                    ClientEventHandlers.handleCollisionAlert(browserWindow, collision);
-                }
-                else {
+                if (!collision) {
                     // if they fly parallel
                     collision = checkParallelCollision(newFlight, existingFlight);
-                    if (collision)
-                        ClientEventHandlers.handleCollisionAlert(browserWindow, collision);
                 }
+
+                // if a collision happened, alert the renderer process
+                if (collision)
+                    ClientEventHandlers.handleCollisionAlert(browserWindow, collision);
             }
             return { success: true };
         });
