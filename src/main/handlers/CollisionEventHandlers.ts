@@ -11,22 +11,19 @@ import { Geodesic } from 'geographiclib-geodesic';
 let all_flights: FlightPath[] = [];
 
 export default function setupCollisionEventHandlers(
-  ipcMain: IpcMain,
-  browserWindow: BrowserWindow,
-  forwardErrors: <T>(action: () => Promise<T>) => Promise<T | null>
-) 
-{
+    ipcMain: IpcMain,
+    browserWindow: BrowserWindow,
+    forwardErrors: <T>(action: () => Promise<T>) => Promise<T | null>
+) {
     // event dispatcher for adding a flight and a collision if there was one
     dispatchEvent('register_flight', ipcMain, async (newFlight: FlightPath) => {
-        const res = await forwardErrors(async () =>
-        {
+        const res = await forwardErrors(async () => {
             // add flight to flights array
             if (all_flights.find(flight => flight.aircraft.id === newFlight.aircraft.id)) return;
             all_flights.push(newFlight);
 
             // check for collisions
-            for (const existingFlight of all_flights) 
-            {
+            for (const existingFlight of all_flights) {
                 if (newFlight === existingFlight || !potentialCollision(newFlight, existingFlight)) continue; // ignore            
                 console.log(`\npotential collision between flight ${newFlight.aircraft.id} and flight ${existingFlight.aircraft.id} has been identified.`);
 
@@ -35,7 +32,7 @@ export default function setupCollisionEventHandlers(
                 // if they collided normally
                 if (collision) {
                     ClientEventHandlers.handleCollisionAlert(browserWindow, collision);
-                } 
+                }
                 else {
                     // if they fly parallel
                     collision = checkParallelCollision(newFlight, existingFlight);
@@ -45,15 +42,14 @@ export default function setupCollisionEventHandlers(
             }
             return { success: true };
         });
-        
+
         if (!res) throw new Error('Error occurred while registering flight collision.');
         return res;
     });
 
     // event dispatcher for removing flights by the flight id (which is the aircraft id)
     dispatchEvent("remove_flight", ipcMain, async (flightID: string) => {
-        const res = await forwardErrors(async () =>
-        {
+        const res = await forwardErrors(async () => {
             // remove the provided flight
             all_flights = all_flights.filter(flight => flight.aircraft.id !== flightID);
             return { success: true };
@@ -70,7 +66,7 @@ export default function setupCollisionEventHandlers(
 
 // allowed time difference for collision check
 const hazardTimeDiff = 3;//seconds
-function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : CollisionData | null {
+function checkNormalCollision(flightA: FlightPath, flightB: FlightPath): CollisionData | null {
 
     // get the flights intersection point
     const flight_intersection = findIntersection(flightA, flightB);
@@ -79,25 +75,24 @@ function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : Collis
     // final returned data
     let collisionData: CollisionData | null = null;
 
-    for (const intersection_point of flight_intersection) 
-    {
+    for (const intersection_point of flight_intersection) {
         // if the intersection point not on both paths, skip it
         if (!isPointOnPath(flightA.start_point, flightA.end_point, intersection_point) ||
             !isPointOnPath(flightB.start_point, flightB.end_point, intersection_point)) continue;
 
         // distance from flight A start to intersection point
         const distA = Geodesic.WGS84.Inverse(
-            flightA.start_point.lat, 
-            flightA.start_point.lon, 
-            intersection_point.lat, 
+            flightA.start_point.lat,
+            flightA.start_point.lon,
+            intersection_point.lat,
             intersection_point.lon
         ).s12!; // <- ! tells the compiler to ignore the possibility of undefined
 
         // distance from flight B start to intersection point
         const distB = Geodesic.WGS84.Inverse(
-            flightB.start_point.lat, 
-            flightB.start_point.lon, 
-            intersection_point.lat, 
+            flightB.start_point.lat,
+            flightB.start_point.lon,
+            intersection_point.lat,
             intersection_point.lon
         ).s12!;
 
@@ -126,7 +121,7 @@ function checkNormalCollision(flightA: FlightPath, flightB: FlightPath) : Collis
     return collisionData;
 }
 
-function potentialCollision(flightA: FlightPath, flightB: FlightPath) : boolean {
+function potentialCollision(flightA: FlightPath, flightB: FlightPath): boolean {
     // the distance from flight A starting point to flight B starting point (in km)
     const startToStart = Geodesic.WGS84.Inverse(
         flightA.start_point.lat, flightA.start_point.lon,
@@ -141,8 +136,7 @@ function potentialCollision(flightA: FlightPath, flightB: FlightPath) : boolean 
 }
 
 const minVectorLength = 0.0001;
-function findIntersection(flightA: FlightPath, flightB: FlightPath) : { lat: number; lon: number }[] | null
-{
+function findIntersection(flightA: FlightPath, flightB: FlightPath): { lat: number; lon: number }[] | null {
     // get start, end vector for flight A
     const startVectorA = VectorMath.latLonToVector(flightA.start_point.lat, flightA.start_point.lon);
     const endVectorA = VectorMath.latLonToVector(flightA.end_point.lat, flightA.end_point.lon);
@@ -162,7 +156,7 @@ function findIntersection(flightA: FlightPath, flightB: FlightPath) : { lat: num
     // there is no single well-defined intersection point, so vector math doesn't work,
     // we need to calculate using kinematics
     if (length < minVectorLength) return null;
-    
+
     // get the intersection vector and return the two possible lat/lon points of intersection on earth
     const intersectionVec = VectorMath.normalize(crossP);
     return [
@@ -173,22 +167,21 @@ function findIntersection(flightA: FlightPath, flightB: FlightPath) : { lat: num
 
 // if distance(start -> intersection_point) + distance(intersection_point -> end) - totalDistance ~ 0
 function isPointOnPath(
-  start: { lat: number; lon: number },
-  end: { lat: number; lon: number },
-  point: { lat: number; lon: number },
-  exceedBoundry = 50//meters
-): boolean 
-{
-  const total = Geodesic.WGS84.Inverse(start.lat, start.lon, end.lat, end.lon).s12!;
-  const startToPoint = Geodesic.WGS84.Inverse(start.lat, start.lon, point.lat, point.lon).s12!;
-  const pointToEnd = Geodesic.WGS84.Inverse(point.lat, point.lon, end.lat, end.lon).s12!;
+    start: { lat: number; lon: number },
+    end: { lat: number; lon: number },
+    point: { lat: number; lon: number },
+    exceedBoundry = 50//meters
+): boolean {
+    const total = Geodesic.WGS84.Inverse(start.lat, start.lon, end.lat, end.lon).s12!;
+    const startToPoint = Geodesic.WGS84.Inverse(start.lat, start.lon, point.lat, point.lon).s12!;
+    const pointToEnd = Geodesic.WGS84.Inverse(point.lat, point.lon, end.lat, end.lon).s12!;
 
-  return Math.abs(startToPoint + pointToEnd - total) <= exceedBoundry;
+    return Math.abs(startToPoint + pointToEnd - total) <= exceedBoundry;
 }
 
 // if the planes are basicaly on the same exact path (great circle)
 const collisionErrorMargin = 1;//meter
-function checkParallelCollision(flightA: FlightPath, flightB: FlightPath): CollisionData | null {        
+function checkParallelCollision(flightA: FlightPath, flightB: FlightPath): CollisionData | null {
 
     const headingDiff = Math.abs(flightA.heading - flightB.heading);
     // not heading towards each other
@@ -201,10 +194,10 @@ function checkParallelCollision(flightA: FlightPath, flightB: FlightPath): Colli
     let collisTime;
 
     // heading towards each other (head on) -> v2 is negative
-    collisTime = areHeadOn(headingDiff) 
-        ? KinematicMath.timeOfIntersection(flightA, flightB, v1, -v2, a1, a2) 
+    collisTime = areHeadOn(headingDiff)
+        ? KinematicMath.timeOfIntersection(flightA, flightB, v1, -v2, a1, a2)
         : KinematicMath.timeOfIntersection(flightA, flightB, v1, v2, a1, a2);
-        
+
     if (!collisTime) return null;
 
     // d = v*t + 0.5 * a * t^2 -> the flight's distance from start to collision point
@@ -224,28 +217,28 @@ function checkParallelCollision(flightA: FlightPath, flightB: FlightPath): Colli
     // is the collision point on the flight paths
     const onPathA = isPointOnPath(
         flightA.start_point, flightA.end_point,
-        {lat: collisFlightA.lat2!, lon: collisFlightA.lon2!}
+        { lat: collisFlightA.lat2!, lon: collisFlightA.lon2! }
     );
     const onPathB = isPointOnPath(
-        flightB.start_point, flightB.end_point, 
-        {lat: collisFlightB.lat2!, lon: collisFlightB.lon2!}
+        flightB.start_point, flightB.end_point,
+        { lat: collisFlightB.lat2!, lon: collisFlightB.lon2! }
     );
 
     if (onPathA && onPathB) {
         // ****************************************************** DEBUG
         logCollisionDebug(flightA, flightB, collisTime, collisTime, 0);
-    
+
         return {
             planeA: flightA.aircraft,
             planeB: flightB.aircraft,
             time_of_collision: collisTime,
-            coordinates: { 
+            coordinates: {
                 lat: collisFlightA.lat2!,
                 lon: collisFlightA.lon2!
             },
             time_difference: 0 // parallel flights allways reach the collision at the same exact time
         };
-    };        
+    };
     return null;
 }
 const areHeadOn = (headingDiff: number) => (headingDiff > 177 && headingDiff < 183);
@@ -258,5 +251,5 @@ function logCollisionDebug(
     console.log(`flight ${flightA.aircraft.id} reached the intersection point in ${timeA} sec`);
     console.log(`flight ${flightB.aircraft.id} reached the intersection point in ${timeB} sec`);
     console.log(`flights time difference: ${timeDiff} seconds`);
-    console.log(`${(timeDiff <= hazardTimeDiff) ? 'COLLISION!' : 'No collision.'}`); 
+    console.log(`${(timeDiff <= hazardTimeDiff) ? 'COLLISION!' : 'No collision.'}`);
 }

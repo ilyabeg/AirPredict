@@ -7,8 +7,7 @@ export default function dispatchEvent<T extends keyof IPCMethods>(
   // eslint-disable-next-line no-undef
   ipcMain: Electron.IpcMain,
   handler: (param: IPCMethods[T]['request']) => Promise<IPCMethods[T]['response']> // <- the handler method we write
-) 
-{
+) {
   type Request = IPCMethods[T]['request'];   // the type of request based on the event
   type Response = IPCMethods[T]['response']; // the type of response based on the event
   ipcMain.handle(

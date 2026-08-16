@@ -1,7 +1,7 @@
 import { BrowserWindow } from 'electron';
 import emitToClient from '../IPC/EmitToClient';
 import { ErrorMessage } from '../../shared/Types/ErrorMessage';
-import { CollisionData } from 'shared/Types/CollisionData'; 
+import { CollisionData } from 'shared/Types/CollisionData';
 
 export function handleErrorMessage(
   browserWindow: BrowserWindow,
@@ -11,7 +11,7 @@ export function handleErrorMessage(
 }
 
 export function handleCollisionAlert(
-  browserWindow: BrowserWindow, 
+  browserWindow: BrowserWindow,
   data: CollisionData
 ): void {
   emitToClient(browserWindow, 'collision_alert', data);

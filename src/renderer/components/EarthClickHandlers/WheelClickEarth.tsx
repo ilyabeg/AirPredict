@@ -24,9 +24,9 @@ export default function WheelClickEarth() {
 
         // get the feature of the picked place (the click)
         const pickedFeature = viewer.scene.pick(movement.position);
-        if (!Cesium.defined(pickedFeature)) 
+        if (!Cesium.defined(pickedFeature))
             return; // nothing picked
-        
+
         if (flightRef.current === undefined) {
             // if the picked point is an entity (meaning flight path)
             if (pickedFeature.id) // <- pickedFeature.id instanceof Cesium.Entity
@@ -63,10 +63,10 @@ export default function WheelClickEarth() {
                     zIndex: 9999,
                 }}>
 
-                <div style={{position: 'relative'}}>
+                <div style={{ position: 'relative' }}>
 
                     {/* trigger flight path display card visibility when the user actualy picks a flight */}
-                    {pickedFlight && <FlightPathDisplay flight={pickedFlight}/>}
+                    {pickedFlight && <FlightPathDisplay flight={pickedFlight} />}
 
                     {/* btn to close card manually */}
                     {pickedFlight && <button style={{
@@ -74,9 +74,9 @@ export default function WheelClickEarth() {
                         height: '10px', width: '10px', color: 'gray', fontSize: '15px', fontWeight: 'lighter',
                         top: '30px', right: '0px'
                     }}
-                    onClick={closeCard}> x </button>}   
+                        onClick={closeCard}> x </button>}
 
-                </div>             
+                </div>
             </div>
         </>
     );

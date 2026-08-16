@@ -7,7 +7,7 @@ const RAD_TO_DEG = 180 / Math.PI; // convert radians to degrees
 // get the 3D vector point of the lan/lon point on earth
 export function latLonToVector(lat: number, lon: number): Vector {
   // convert degrees to radians
-  const latRad = lat * DEG_TO_RAD; 
+  const latRad = lat * DEG_TO_RAD;
   const lonRad = lon * DEG_TO_RAD;
   return {
     x: Math.cos(latRad) * Math.cos(lonRad),
@@ -41,18 +41,18 @@ export function vectorLength(v: Vector): number {
 // normalize the length of the vector to 1
 export function normalize(v: Vector): Vector {
   const length = vectorLength(v);
-  return { 
-    x: v.x / length, 
-    y: v.y / length, 
-    z: v.z / length 
+  return {
+    x: v.x / length,
+    y: v.y / length,
+    z: v.z / length
   };
 }
 
 // היפוך הווקטור - כלומר להפוך אותו לשלילי
 export function negate(v: Vector): Vector {
-  return { 
-    x: -v.x, 
-    y: -v.y, 
-    z: -v.z 
+  return {
+    x: -v.x,
+    y: -v.y,
+    z: -v.z
   };
 }

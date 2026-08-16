@@ -17,7 +17,7 @@ export const HARDCODED_COLLISIONS: FlightPath[] = [
         aircraft: { id: "FLIGHT_1B_SOUTH_NORTH", initial_velocity: 248.3285, acceleration: 0 },
         start_point: { lat: -5, lon: 0 },
         end_point: { lat: 5, lon: 0 },
-        distance: 1105751.968, 
+        distance: 1105751.968,
         heading: 0
     },
 

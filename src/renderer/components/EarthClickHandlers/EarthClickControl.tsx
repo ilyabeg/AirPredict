@@ -19,10 +19,10 @@ export default function EarthClickControl() {
 
     // flights array
     const [allFlights, setFlights] = useState<FlightPath[]>([]);
-    
+
     const cesiumContext = useCesium(); // <- all cesium main components such as viewer, scene ...
     if (!cesiumContext.viewer) return;
-    
+
     // create a master start time for all the application flights to start at the exact monent
     const masterStartRef = useRef<Cesium.JulianDate>();
 
@@ -68,46 +68,46 @@ export default function EarthClickControl() {
     }, []);
 
 
-    return(
+    return (
         <>
-            <FlightsContext.Provider value={{allFlights, setFlights}}>
-                <LeftClickEarth/>
-                <RightClickEarth/>
-                <WheelClickEarth/>
+            <FlightsContext.Provider value={{ allFlights, setFlights }}>
+                <LeftClickEarth />
+                <RightClickEarth />
+                <WheelClickEarth />
             </FlightsContext.Provider>
 
             {/* loop through all saved flights and draw them */}
             {allFlights.map((flight) => (
-            <React.Fragment key={`${flight.aircraft.id}`}>
-                {/* Start Pin */}
-                <FlightPin id={`${flight.aircraft.id}-START`} lat={flight.start_point.lat} lon={flight.start_point.lon} color={Cesium.Color.RED} />
-                
-                {/* End Pin */}
-                <FlightPin id={`${flight.aircraft.id}-END`} lat={flight.end_point.lat} lon={flight.end_point.lon} color={Cesium.Color.RED} />
-                
-                {/* the connecting line */}
-                <Entity
-                    id={`${flight.aircraft.id}`} // give the line an id to remove
-                    polyline={{
-                        positions: Cesium.Cartesian3.fromDegreesArray([
-                        flight.start_point.lon, flight.start_point.lat,
-                        flight.end_point.lon, flight.end_point.lat
-                        ]),
-                        width: 3,
-                        material: Cesium.Color.RED,
-                        clampToGround: false
-                    }}
-                />
+                <React.Fragment key={`${flight.aircraft.id}`}>
+                    {/* Start Pin */}
+                    <FlightPin id={`${flight.aircraft.id}-START`} lat={flight.start_point.lat} lon={flight.start_point.lon} color={Cesium.Color.RED} />
 
-                {/* moving plane dot */}
-                <MovingDot flight={flight} flightStartTime={masterStartRef.current!} />
-            </React.Fragment>
+                    {/* End Pin */}
+                    <FlightPin id={`${flight.aircraft.id}-END`} lat={flight.end_point.lat} lon={flight.end_point.lon} color={Cesium.Color.RED} />
+
+                    {/* the connecting line */}
+                    <Entity
+                        id={`${flight.aircraft.id}`} // give the line an id to remove
+                        polyline={{
+                            positions: Cesium.Cartesian3.fromDegreesArray([
+                                flight.start_point.lon, flight.start_point.lat,
+                                flight.end_point.lon, flight.end_point.lat
+                            ]),
+                            width: 3,
+                            material: Cesium.Color.RED,
+                            clampToGround: false
+                        }}
+                    />
+
+                    {/* moving plane dot */}
+                    <MovingDot flight={flight} flightStartTime={masterStartRef.current!} />
+                </React.Fragment>
             ))}
         </>
     );
 }
 
-function setViewerClockConfig(viewer: Cesium.Viewer, start: Cesium.JulianDate) : void {
-    viewer.clock.startTime = start.clone();    
+function setViewerClockConfig(viewer: Cesium.Viewer, start: Cesium.JulianDate): void {
+    viewer.clock.startTime = start.clone();
     viewer.clock.multiplier = 1;
 }

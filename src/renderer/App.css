@@ -1,9 +1,13 @@
 /* Force the foundation of the app to take the full window height with a black background */
-html, body, #root {
+html,
+body,
+#root {
   margin: 0;
   padding: 0;
-  height: 100vh; /* this forces all the fundational html elements take up the full browser's window viewport height */
-  overflow: hidden; /* disables scrollbars on the main window if any content clips over the screen's edges */
+  height: 100vh;
+  /* this forces all the fundational html elements take up the full browser's window viewport height */
+  overflow: hidden;
+  /* disables scrollbars on the main window if any content clips over the screen's edges */
   background-color: #000000;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
@@ -17,7 +21,7 @@ html, body, #root {
 
 .main-content {
   flex: 1;
-  
+
   /* makes child elements (with absolute position) be positioned relatively to this main content container */
-  position: relative; 
+  position: relative;
 }

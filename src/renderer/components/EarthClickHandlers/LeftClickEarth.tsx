@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react';
 import { ScreenSpaceEventHandler, ScreenSpaceEvent, useCesium } from 'resium';
 import * as Cesium from 'cesium';
-import invokeServer from '../../IPC/InvokeServer'; 
+import invokeServer from '../../IPC/InvokeServer';
 import FlightPin from '../FlightDisplayComponents/FlightPointPin';
 import { FlightPath } from 'shared/Types/FlightPath';
 import { FlightsContext, FlightContextProp } from './EarthClickControl';
@@ -12,13 +12,13 @@ import FadeMessage from '../general/FadeMessage';
 const RAD_TO_DEG = 180 / Math.PI;
 
 export default function LeftClickEarth() {
-  
+
   const { viewer } = useCesium(); // <- the actual 3D globe
   const flightsContextProp = useContext(FlightsContext);
   const appStateContext = useContext(AppStateContext);         // app state
   const configFlightContext = useContext(ConfigFlightContext); // temp flight configurations
 
-  if (!flightsContextProp || !viewer || !configFlightContext || appStateContext?.appState !== app_state.CLICKING) 
+  if (!flightsContextProp || !viewer || !configFlightContext || appStateContext?.appState !== app_state.CLICKING)
     return;
 
   // reset configurations
@@ -32,7 +32,7 @@ export default function LeftClickEarth() {
 
   // check if the temporary flight configs exist already
   const newFlightId = configFlightContext.configFlight.aircraftID;
-  
+
   if (flightsContextProp.allFlights.find(flight => flight.aircraft.id === newFlightId)) {
     alert("Flight identificator must be unique.");
     appStateContext.setAppState(app_state.DEFAULT);
@@ -62,7 +62,7 @@ export default function LeftClickEarth() {
 
       if (!startPoint) {
         setStartPoint({ lat: lat, lon: lon });
-      } 
+      }
       else {
         const endPoint = { lat: lat, lon: lon };
 
@@ -76,8 +76,8 @@ export default function LeftClickEarth() {
           // add the new flight and reset
           addFlight(result, startPoint, endPoint, flightsContextProp, configFlightContext);
           resetConfigContext();
-          resetStartAndState();        
-        } 
+          resetStartAndState();
+        }
         catch (error) {
           // display the error in the console and reset 
           console.error('IPC bridge failed:', error);
@@ -88,7 +88,7 @@ export default function LeftClickEarth() {
   };
 
   const resetStartAndState = () => {
-    setStartPoint(null); 
+    setStartPoint(null);
     appStateContext.setAppState(app_state.DEFAULT);
   }
 
@@ -108,9 +108,9 @@ export default function LeftClickEarth() {
 // helpers
 
 function addFlight(
-  result: {distance: number, heading: number},
-  startPoint: {lat: number, lon: number}, 
-  endPoint: {lat: number, lon: number},
+  result: { distance: number, heading: number },
+  startPoint: { lat: number, lon: number },
+  endPoint: { lat: number, lon: number },
   flightsContextProp: FlightContextProp,
   configContext: ConfigFlightProp
 ) {
@@ -121,17 +121,17 @@ function addFlight(
   const acceleration = configContext.configFlight.acceleration;
 
   const newFlight: FlightPath = {
-      aircraft: {
-        id: aircraftID,
-        initial_velocity: velocity,
-        acceleration: acceleration,
-      }, 
-      start_point: startPoint,
-      end_point: endPoint,
-      distance: result.distance,
-      heading: result.heading          
-    };
-  flightsContextProp.setFlights(prevFlights => [...prevFlights, newFlight]); 
+    aircraft: {
+      id: aircraftID,
+      initial_velocity: velocity,
+      acceleration: acceleration,
+    },
+    start_point: startPoint,
+    end_point: endPoint,
+    distance: result.distance,
+    heading: result.heading
+  };
+  flightsContextProp.setFlights(prevFlights => [...prevFlights, newFlight]);
 
   // register the flight in the backend
   invokeServer('register_flight', newFlight);

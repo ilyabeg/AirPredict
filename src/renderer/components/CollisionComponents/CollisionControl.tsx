@@ -10,7 +10,7 @@ export default function CollisionControl() {
     const handleDisplayCollision = (event: Event) => {
       const e = event as CustomEvent<CollisionData>;
       const newCollision = e.detail;
-      
+
       // add the new crash to the array, keeping all previous crashes
       setActiveCollisions(prevCrashes => [...prevCrashes, newCollision]);
       // React prvious state: updtaes the previous values with an updater function instead of passing by value
@@ -19,7 +19,7 @@ export default function CollisionControl() {
     const handleRemoveCollision = (event: Event) => {
       const e = event as CustomEvent<string>;
       const flightID: string = e.detail;
-      
+
       // remove old crash from the array if one of the flight paths got removed, meaning there is no crash anymore
       setActiveCollisions(prevCrashes => prevCrashes.filter(
         collision => collision.planeA.id !== flightID && collision.planeB.id !== flightID
@@ -32,14 +32,14 @@ export default function CollisionControl() {
 
     // remove listeners when component unmounts/re-renders
     return () => {
-        window.removeEventListener('display-collision-card', handleDisplayCollision);
-        window.removeEventListener('remove-collision-card', handleRemoveCollision);
+      window.removeEventListener('display-collision-card', handleDisplayCollision);
+      window.removeEventListener('remove-collision-card', handleRemoveCollision);
     };
   }, []);
 
   return (
     <>
-      {activeCollisions.map((collision) => 
+      {activeCollisions.map((collision) =>
       (
         <CollisionDisplayCard collision={collision} />
       ))}

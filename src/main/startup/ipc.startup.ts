@@ -11,15 +11,12 @@ export default function setIpcRoutes(
   // eslint-disable-next-line no-undef
   ipcMain: Electron.IpcMain,
   browserWindow: BrowserWindow
-) 
-{
-  async function forwardErrorsToClient<T>(action: () => Promise<T>): Promise<T | null> 
-  {
+) {
+  async function forwardErrorsToClient<T>(action: () => Promise<T>): Promise<T | null> {
     try {
       return action(); // try to execute the event handler 
-    } 
-    catch (ex: any) 
-    {
+    }
+    catch (ex: any) {
       // eslint-disable-next-line camelcase
       const err_msg: ErrorMessage = {
         stringMessage: `Error from server: ${createStackTraceFromException(ex)}`
@@ -28,7 +25,7 @@ export default function setIpcRoutes(
       // if handler crashed, forward error to Frontend UI
       try {
         ClientEventHandlers.handleErrorMessage(browserWindow, err_msg);
-      } 
+      }
       catch (exc: any) {
         console.log(
           // eslint-disable-next-line prettier/prettier

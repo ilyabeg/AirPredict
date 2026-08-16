@@ -8,7 +8,7 @@ interface MovingDotProps {
     flightStartTime: Cesium.JulianDate
 }
 
-export default function MovingDot({flight, flightStartTime}: MovingDotProps) {
+export default function MovingDot({ flight, flightStartTime }: MovingDotProps) {
 
     const cesiumContext = useCesium(); // world viewer
     if (!cesiumContext.viewer) return;
@@ -25,11 +25,11 @@ export default function MovingDot({flight, flightStartTime}: MovingDotProps) {
     // start and end dates and time
     const flightEndTime = Cesium.JulianDate.addSeconds(flightStartTime, totalFlightTime, new Cesium.JulianDate());
     // console.log(`flight start time: ${flightStartTime}; end time: ${flightEndTime}`); // debug check
-    
+
     // sample flight 3d positions over time
     const computeFlight = () => {
         const sampleProperty = new Cesium.SampledPositionProperty();
-        
+
         // add flight sample every 60 seconds        
         for (let seconds = 0; seconds <= totalFlightTime; seconds += 60) {
             const res = calculatePosAndTime(flight, seconds, flightStartTime);
@@ -62,13 +62,13 @@ export default function MovingDot({flight, flightStartTime}: MovingDotProps) {
                 id={`${flight.aircraft.id}-MOV-DOT`}
 
                 //availability = when the entity is visible
-                availability={ 
+                availability={
                     new Cesium.TimeIntervalCollection([
                         new Cesium.TimeInterval({
                             start: flightStartTime,
                             stop: flightEndTime
-                    })
-                ])}
+                        })
+                    ])}
 
                 position={dotPositions}
 
@@ -80,10 +80,10 @@ export default function MovingDot({flight, flightStartTime}: MovingDotProps) {
                     disableDepthTestDistance: 99999,
                 }}
 
-                // model={{
-                //     uri: "/models/CesiumAir/Cesium_Air.glb",
-                //     minimumPixelSize: 64
-                // }}
+            // model={{
+            //     uri: "/models/CesiumAir/Cesium_Air.glb",
+            //     minimumPixelSize: 64
+            // }}
             />
         </>
     );
@@ -97,7 +97,7 @@ function calculatePosAndTime(
     flight: FlightPath,
     seconds: number,
     startTime: Cesium.JulianDate
-) : {position: Cesium.Cartesian3, time: Cesium.JulianDate} {
+): { position: Cesium.Cartesian3, time: Cesium.JulianDate } {
 
     // position at time 'i'
     const positionDegrees = positionAtTime(flight, seconds); // lat lon position

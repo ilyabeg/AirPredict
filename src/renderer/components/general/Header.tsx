@@ -13,7 +13,7 @@ export default function Header() {
 
     // start configuring the plane object
     const handleClick = () => {
-        if (appStateContext && appStateContext.appState === app_state.DEFAULT){
+        if (appStateContext && appStateContext.appState === app_state.DEFAULT) {
             appStateContext.setAppState(app_state.CONFIGURING);
         }
     };

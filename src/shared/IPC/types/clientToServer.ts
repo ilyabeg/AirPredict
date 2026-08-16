@@ -13,9 +13,9 @@ export interface IPCMethods {
                 lon: number;
             };
         };
-        response: { 
+        response: {
             distance: number,
-            heading: number         
+            heading: number
         };
     };
 

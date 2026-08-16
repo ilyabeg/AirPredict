@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 interface FadeMsgProp {
     message: string
 }
-export default function FadeMessage({ message }: FadeMsgProp) {    
+export default function FadeMessage({ message }: FadeMsgProp) {
 
     // make message box fade in and out after 5 sec ...
 

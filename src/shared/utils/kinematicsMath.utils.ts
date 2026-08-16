@@ -5,7 +5,7 @@ function calcQuadraticFormula(A: number, B: number, C: number) {
   const discriminant = B ** 2 - 4 * A * C;
   if (discriminant < 0) return null; // no solutions
 
-  const sqrtDisc = Math.sqrt(discriminant);    
+  const sqrtDisc = Math.sqrt(discriminant);
   const solution1 = (-B + sqrtDisc) / (2 * A);
   const solution2 = (-B - sqrtDisc) / (2 * A);
 
@@ -17,26 +17,25 @@ export function timeToReachDistance(
   distance: number,
   initialVelocity: number,
   acceleration: number
-): number | null 
-{
+): number | null {
   if (acceleration === 0) {
     if (initialVelocity <= 0)
-        return null; // never gets there
+      return null; // never gets there
     return distance / initialVelocity;
   }
 
   // משוואה ריבועית
   // At^2 + Bt - C = 0 -> t 1,2
   let timeSolutions = calcQuadraticFormula(
-    0.5 * acceleration, 
-    initialVelocity, 
+    0.5 * acceleration,
+    initialVelocity,
     -distance
   );
   if (!timeSolutions) return null;
 
   timeSolutions = timeSolutions.filter(time => time > 0); // get only the positive time solutions
   // if there is at least 1 solution return the earliest
-  return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null; 
+  return (timeSolutions.length > 0) ? Math.min(...timeSolutions) : null;
   // ... = spread operator -> return the min element inside the array
 }
 
@@ -48,19 +47,19 @@ export function timeOfIntersection(
   initialVelocity2: number,
   acceleration1: number,
   acceleration2: number
-) : number | null {
+): number | null {
 
   const A = (acceleration1 - acceleration2) / 2;
   const B = initialVelocity1 - initialVelocity2;
-  
-   // distance between the two starting points (|x1 - x2|)
+
+  // distance between the two starting points (|x1 - x2|)
   const dist = Geodesic.WGS84.Inverse(
-    flightA.start_point.lat, flightA.start_point.lon, 
+    flightA.start_point.lat, flightA.start_point.lon,
     flightB.start_point.lat, flightB.start_point.lon
   ).s12!;
 
   // determine the sign of the distance 
-  const C = (isInFront(flightA, flightB)) ? dist: -dist;
+  const C = (isInFront(flightA, flightB)) ? dist : -dist;
 
   // משוואה ריבועית
   if (A !== 0) {
@@ -89,7 +88,7 @@ export function timeOfIntersection(
 function isInFront(
   flightA: FlightPath,
   flightB: FlightPath
-) : boolean {
+): boolean {
 
   const headingFromBtoA = Geodesic.WGS84.Inverse(
     flightB.start_point.lat, flightB.start_point.lon,
@@ -110,7 +109,7 @@ function isInFront(
 export function positionAtTime(
   flight: FlightPath,
   time: number
-) : {lat: number, lon: number} | null {
+): { lat: number, lon: number } | null {
 
   const initialVelocity = flight.aircraft.initial_velocity;
   const acceleration = flight.aircraft.acceleration;

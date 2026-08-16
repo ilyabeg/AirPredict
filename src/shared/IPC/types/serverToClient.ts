@@ -7,7 +7,7 @@ export interface IPC_PushNotification {
     payload: ErrorMessage;
   };
 
-  collision_alert: { 
+  collision_alert: {
     payload: CollisionData;
   };
 }

@@ -1,5 +1,5 @@
-export type Vector = { 
-    x: number; 
-    y: number; 
-    z: number 
+export type Vector = {
+    x: number;
+    y: number;
+    z: number
 };

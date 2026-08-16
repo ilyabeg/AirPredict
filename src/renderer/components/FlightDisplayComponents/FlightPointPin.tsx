@@ -13,7 +13,7 @@ export default function FlightPin({ id, lat, lon, color = Cesium.Color.VIOLET }:
   return (
     <Entity
       id={id}
-      position={Cesium.Cartesian3.fromDegrees(lon, lat)}    
+      position={Cesium.Cartesian3.fromDegrees(lon, lat)}
       point={{
         pixelSize: 12,
         color: color,
