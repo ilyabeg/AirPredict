@@ -5,11 +5,11 @@ syntax = "proto3"; // <- tells the compiler to use version 'proto3'
 package collisionGRPC;
 
 service CollisionService {
-    rpc PrintCollision (CollisionData) returns (CollisionResponce);
+    rpc PrintCollision (CollisionRequest) returns (CollisionResponce);
 }
 
 // CollisionData definition
-message CollisionData {
+message CollisionRequest {
     string planeA = 1;
     string planeB = 2;
     double time_of_collision = 3;
