@@ -20,23 +20,17 @@ const client = new grpcObj.collisionGRPC.CollisionService(
     grpc.credentials.createInsecure()
 );
 
-// temp collision for testing
-const request: CollisionRequest = {
-    planeA: "flight A",
-    planeB: "flight B",
-    timeOfCollision: 0, //sec
-    timeDifference: 0,  //sec
-    lat: 5, lon: 5
+// exported function to send the collisions to the C# server at runtime
+export default function sendGrpcCollision(request: CollisionRequest) {
+    client.printCollision(request, (error, response) => {
+        if (error) {
+            console.error("Error:", error.message);
+            return;
+        }
+
+        if (!response)
+            return;
+
+        console.info(`gRPC was a ${(response.success) ? 'success:' : 'failiure:'} ${response.msg}.`);
+    });
 };
-
-client.printCollision(request, (error, response) => {
-    if (error) {
-        console.error("Error:", error.message);
-        return;
-    }
-
-    if (!response)
-        return;
-
-    console.info(`gRPC was a ${(response.success) ? 'success:' : 'failiure:'} ${response.msg}.`);
-});

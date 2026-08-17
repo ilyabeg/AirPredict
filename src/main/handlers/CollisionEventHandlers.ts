@@ -6,6 +6,8 @@ import * as VectorMath from '../../shared/utils/vectorMath.utils';
 import * as KinematicMath from '../../shared/utils/kinematicsMath.utils';
 import * as ClientEventHandlers from '../handlers/clientNotificationHandlers';
 import { Geodesic } from 'geographiclib-geodesic';
+import sendGrpcCollision from '../../gRPC/grpcClient';
+import { CollisionRequest } from 'generated/CollisionRequest';
 
 // all registered flights
 let all_flights: FlightPath[] = [];
@@ -35,9 +37,11 @@ export default function setupCollisionEventHandlers(
                     collision = checkParallelCollision(newFlight, existingFlight);
                 }
 
-                // if a collision happened, alert the renderer process
-                if (collision)
+                // if a collision happened, alert the renderer process and the gRPC server
+                if (collision) {
                     ClientEventHandlers.handleCollisionAlert(browserWindow, collision);
+                    sendCollisionToServer(collision);
+                }
             }
             return { success: true };
         });
@@ -59,6 +63,18 @@ export default function setupCollisionEventHandlers(
     });
 }
 
+// ***************** gRPC send **********************
+function sendCollisionToServer(collision: CollisionData) {
+    const request: CollisionRequest = {
+        planeA: collision.planeA.id,
+        planeB: collision.planeA.id,
+        timeOfCollision: collision.time_of_collision,
+        timeDifference: collision.time_difference,
+        lat: collision.coordinates.lat,
+        lon: collision.coordinates.lon
+    }
+    sendGrpcCollision(request);
+}
 
 
 // ***************** collision calculations **********
