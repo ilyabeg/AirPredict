@@ -21,6 +21,7 @@ message CollisionRequest {
 // server response definition
 message CollisionResponce {
     bool success = 1;
+    string msg = 2;
 }
 
 // personal note: the field numbers/tags is gRPC's way of compressing the sent data.

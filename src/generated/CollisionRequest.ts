@@ -1,4 +1,4 @@
-// Original file: src/shared/gRPC/protos/collision.proto
+// Original file: src/gRPC/proto/collision.proto
 
 
 export interface CollisionRequest {

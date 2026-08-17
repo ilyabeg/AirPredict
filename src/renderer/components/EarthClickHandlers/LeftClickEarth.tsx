@@ -34,9 +34,12 @@ export default function LeftClickEarth() {
   const newFlightId = configFlightContext.configFlight.aircraftID;
 
   if (flightsContextProp.allFlights.find(flight => flight.aircraft.id === newFlightId)) {
+
     alert("Flight identificator must be unique.");
+
     appStateContext.setAppState(app_state.DEFAULT);
     resetConfigContext();
+
     return; /*(
       <FadeMessage message={"Flight identificator must be unique."}/>
     );*/

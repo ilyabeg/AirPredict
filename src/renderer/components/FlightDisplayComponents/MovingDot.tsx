@@ -20,11 +20,9 @@ export default function MovingDot({ flight, flightStartTime }: MovingDotProps) {
         flight.aircraft.acceleration
     );
     if (!totalFlightTime) return;
-    // console.log(`total flight time supposed to be: ~${Math.round(totalFlightTime/60)} minutes`); // debug check
 
     // start and end dates and time
     const flightEndTime = Cesium.JulianDate.addSeconds(flightStartTime, totalFlightTime, new Cesium.JulianDate());
-    // console.log(`flight start time: ${flightStartTime}; end time: ${flightEndTime}`); // debug check
 
     // sample flight 3d positions over time
     const computeFlight = () => {

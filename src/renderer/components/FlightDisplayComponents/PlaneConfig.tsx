@@ -44,68 +44,66 @@ export default function PlaneConfig() {
     }
 
     return (
-        <>
-            <div className='content-wrapper'>
-                {/* 'sx' allows to use css directly inside this component */}
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                    <Card className="container" >
+        <div className='content-wrapper'>
+            {/* 'sx' allows to use css directly inside this component */}
+            <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                <Card className="container" >
 
-                        {/* pb: '16px' is an MUI shortcut that fixes a weird default padding issue on CardContent */}
-                        <CardContent sx={{ pb: '16px !important', minWidth: 'auto' }}> {/* important! tells MUI to override it's deafult settings */}
+                    {/* pb: '16px' is an MUI shortcut that fixes a weird default padding issue on CardContent */}
+                    <CardContent sx={{ pb: '16px !important', minWidth: 'auto' }}> {/* important! tells MUI to override it's deafult settings */}
 
-                            {/* flight id */}
-                            <Box className="title">
-                                <Typography variant="h6">
-                                    <strong>Plane Configuration</strong>
-                                </Typography>
-                            </Box>
+                        {/* flight id */}
+                        <Box className="title">
+                            <Typography variant="h6">
+                                <strong>Plane Configuration</strong>
+                            </Typography>
+                        </Box>
 
-                            <Divider sx={{ backgroundColor: 'rgba(255,255,255,0.2)', mb: 1.5 }} />
+                        <Divider sx={{ backgroundColor: 'rgba(255,255,255,0.2)', mb: 1.5 }} />
 
-                            {/* config settings */}
-                            <Box className="setting">
-                                <AirplaneIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
-                                <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
-                                    Aircraft ID:
-                                </Typography>
-                                <input style={{ marginLeft: 'auto' }} className="user-input" type='text'
-                                    placeholder='Enter ID (optional)...'
-                                    onBlur={(blurEvent) => setID(blurEvent.target.value)} />
-                            </Box>
+                        {/* config settings */}
+                        <Box className="setting">
+                            <AirplaneIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
+                            <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
+                                Aircraft ID:
+                            </Typography>
+                            <input style={{ marginLeft: 'auto' }} className="user-input" type='text'
+                                placeholder='Enter ID (optional)...'
+                                onBlur={(blurEvent) => setID(blurEvent.target.value)} />
+                        </Box>
 
-                            <Box className="setting">
-                                <SpeedIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
-                                <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
-                                    Initial Velocity:
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 'lighter', color: 'gray', ml: 'auto', mr: '4px' }}>m/s</Typography>
-                                <input className="user-input" type='number' id='velocity-input'
-                                    placeholder='Enter velocity...'
-                                    onBlur={(blurEvent) => setVelocity(blurEvent.target.valueAsNumber)} />
-                            </Box>
+                        <Box className="setting">
+                            <SpeedIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
+                            <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
+                                Initial Velocity:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 'lighter', color: 'gray', ml: 'auto', mr: '4px' }}>m/s</Typography>
+                            <input className="user-input" type='number' id='velocity-input'
+                                placeholder='Enter velocity...'
+                                onBlur={(blurEvent) => setVelocity(blurEvent.target.valueAsNumber)} />
+                        </Box>
 
-                            <Box className="setting">
-                                <RocketLaunchIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
-                                <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
-                                    Acceleration:
-                                </Typography>
-                                <Typography variant="body2" sx={{ fontWeight: 'lighter', color: 'gray', ml: 'auto', mr: '4px' }}>m/s²</Typography>
-                                <input className="user-input" type='number' id='acceleration-input'
-                                    placeholder='Enter acceleration (optional)...'
-                                    onBlur={(blurEvent) => setAccel(blurEvent.target.valueAsNumber)} />
-                            </Box>
+                        <Box className="setting">
+                            <RocketLaunchIcon sx={{ fontSize: 20, mr: 1, color: '#d8d8d8' }} />
+                            <Typography variant="body2" sx={{ fontWeight: 'bold', mr: '8px' }}>
+                                Acceleration:
+                            </Typography>
+                            <Typography variant="body2" sx={{ fontWeight: 'lighter', color: 'gray', ml: 'auto', mr: '4px' }}>m/s²</Typography>
+                            <input className="user-input" type='number' id='acceleration-input'
+                                placeholder='Enter acceleration (optional)...'
+                                onBlur={(blurEvent) => setAccel(blurEvent.target.valueAsNumber)} />
+                        </Box>
 
-                            <Box className="buttons-container">
-                                <div className='buttons-wrapper'>
-                                    <button className='option-btn' onClick={cencelConfig}>Cancel</button>
-                                    <button className='option-btn' onClick={registerFlight}>Done</button>
-                                </div>
-                            </Box>
+                        <Box className="buttons-container">
+                            <div className='buttons-wrapper'>
+                                <button className='option-btn' onClick={cencelConfig}>Cancel</button>
+                                <button className='option-btn' onClick={registerFlight}>Done</button>
+                            </div>
+                        </Box>
 
-                        </CardContent>
-                    </Card>
-                </Box>
-            </div>
-        </>
+                    </CardContent>
+                </Card>
+            </Box>
+        </div>
     );
 }
