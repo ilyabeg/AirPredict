@@ -40,7 +40,7 @@ export default function setupCollisionEventHandlers(
                 // if a collision happened, alert the renderer process and the gRPC server
                 if (collision) {
                     ClientEventHandlers.handleCollisionAlert(browserWindow, collision);
-                    sendCollisionToServer(collision);
+                    // sendCollisionToServer(collision);
                 }
             }
             return { success: true };
@@ -213,11 +213,19 @@ function checkParallelCollision(flightA: FlightPath, flightB: FlightPath): Colli
         ? KinematicMath.timeOfIntersection(flightA, flightB, v1, -v2, a1, a2)
         : KinematicMath.timeOfIntersection(flightA, flightB, v1, v2, a1, a2);
 
+
+    // PROBLEM NOT THE COLLISION TIME
+    console.log(`collis time ${collisTime}`);
+
+
     if (!collisTime) return null;
 
     // d = v*t + 0.5 * a * t^2 -> the flight's distance from start to collision point
     const flightDistA = v1 * collisTime + 0.5 * a1 * collisTime ** 2;
     const flightDistB = v2 * collisTime + 0.5 * a2 * collisTime ** 2;
+
+    console.log(`flight dist A: ${flightDistA}, flight dist B: ${flightDistB}`);
+
     if (!flightDistA || !flightDistB) return null;
 
     // both flights' point after flying the amount of distance 'flightDist'

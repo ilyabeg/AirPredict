@@ -11,6 +11,7 @@ import FadeMessage from './components/general/FadeMessage';
 
 // tell cesium exactly where to find all cesium assets
 (window as any).CESIUM_BASE_URL = '/cesium/';
+document.title = 'AirPredict';
 
 // application states
 export enum app_state {
@@ -40,10 +41,6 @@ export const ConfigFlightContext = createContext<ConfigFlightProp | null>(null);
 
 
 export default function App() {
-
-  useEffect(() => {
-    document.title = 'AirPredict';
-  }, []);
 
   useServerEventHandlers();
 
