@@ -1,7 +1,7 @@
 import path from 'path';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
-import { CollisionRequest } from '../generated/CollisionRequest';
+import { CollisionRequest } from '../generated/collisionGRPC/CollisionRequest';
 import { ProtoGrpcType } from '../generated/collision';
 
 const PORT_NUM = 50051;
